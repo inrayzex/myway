@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Путь  вход</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f3efe8;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .auth-card {
+            max-width: 440px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-radius: 2.5rem;
+            padding: 2.5rem 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 30px 60px -20px rgba(0,0,0,0.2);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-header h1 {
+            font-size: 2.2rem;
+            font-weight: 450;
+            color: #2e3b32;
+            letter-spacing: -0.02em;
+        }
+
+        .auth-header p {
+            color: #7b6b5c;
+            margin-top: 0.3rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            background: #e7ddd2;
+            border-radius: 60px;
+            padding: 0.3rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 0.7rem;
+            border-radius: 40px;
+            background: transparent;
+            border: none;
+            font-size: 1rem;
+            color: #5a6557;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            background: white;
+            color: #2e3b32;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.9rem;
+            color: #5e6b53;
+            margin-bottom: 0.4rem;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            background: rgba(255,255,255,0.9);
+            border: 1px solid #e0d3c5;
+            border-radius: 60px;
+            padding: 0.9rem 1.2rem;
+            font-size: 1rem;
+            color: #2d342e;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: #b8a48f;
+            box-shadow: 0 0 0 3px rgba(180,160,140,0.15);
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: #d8cdbf;
+            border: none;
+            padding: 1rem;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #2f3e32;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.6);
+            margin: 1rem 0 1.5rem 0;
+            transition: 0.2s;
+        }
+
+        .submit-btn:hover {
+            background: #c2b3a1;
+        }
+
+        .forgot-link {
+            text-align: center;
+            color: #7b6b5c;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 0.8rem 1.2rem;
+            border-radius: 2rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            border: 1px solid #fecaca;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            white-space: pre-line;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 2rem;
+            color: #a49888;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1>путь</h1>
+            <p>вход в тишину</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('login')">вход</button>
+            <button class="tab" onclick="switchTab('register')">регистрация</button>
+        </div>
+
+        <div id="errorMessage" class="error hidden"></div>
+
+        <!-- Форма входа -->
+        <div id="loginForm">
+            <div class="form-group">
+                <label class="form-label">email</label>
+                <input class="form-input" type="email" id="loginEmail" placeholder="hello@path.ru" value="test@test.com">
+            </div>
+            <div class="form-group">
+                <label class="form-label">пароль</label>
+                <input class="form-input" type="password" id="loginPassword" placeholder="" value="password123">
+            </div>
+            <button class="submit-btn" onclick="login()">войти</button>
+            <div class="forgot-link">забыли пароль?</div>
+        </div>
+
+        <!-- Форма регистрации (скрыта по умолчанию) -->
+        <div id="registerForm" style="display: none;">
+            <div class="form-group">
+                <label class="form-label">имя</label>
+                <input class="form-input" type="text" id="regName" placeholder="Иван Петров">
+            </div>
+            <div class="form-group">
+                <label class="form-label">username (ник)</label>
+                <input class="form-input" type="text" id="regUsername" placeholder="ivan">
+            </div>
+            <div class="form-group">
+                <label class="form-label">email</label>
+                <input class="form-input" type="email" id="regEmail" placeholder="ivan@path.ru">
+            </div>
+            <div class="form-group">
+                <label class="form-label">пароль (минимум 6 символов)</label>
+                <input class="form-input" type="password" id="regPassword" placeholder="">
+            </div>
+            <div class="form-group">
+                <label class="form-label">подтверждение пароля</label>
+                <input class="form-input" type="password" id="regPasswordConfirmation" placeholder="">
+            </div>
+            <button class="submit-btn" onclick="register()">зарегистрироваться</button>
+        </div>
+
+        <div class="footer-note">каждый день &#183; шаг на пути</div>
+    </div>
+
+    <script>
+        const API_URL = '/api';
+        let token = localStorage.getItem('token');
+
+        if (token) {
+            window.location.href = '/app/profile.html';
+        }
+
+        function switchTab(tab) {
+            const tabs = document.querySelectorAll('.tab');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            
+            tabs.forEach(t => t.classList.remove('active'));
+            hideError();
+            
+            if (tab === 'login') {
+                tabs[0].classList.add('active');
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+            } else {
+                tabs[1].classList.add('active');
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+            }
+        }
+
+        function showError(message) {
+            const el = document.getElementById('errorMessage');
+            el.innerHTML = ' ' + message;
+            el.classList.remove('hidden');
+        }
+
+        function hideError() {
+            document.getElementById('errorMessage').classList.add('hidden');
+        }
+
+        async function apiRequest(url, options = {}) {
+            const headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                ...options.headers
+            };
+            
+            const response = await fetch(API_URL + url, {
+                ...options,
+                headers
+            });
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                // Если есть ошибки валидации
+                if (data.errors) {
+                    const messages = Object.values(data.errors).flat().join('\n');
+                    throw new Error(messages);
+                }
+                throw new Error(data.message || 'Ошибка запроса');
+            }
+            return data;
+        }
+
+        async function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email || !password) {
+                showError('Заполните все поля');
+                return;
+            }
+            
+            try {
+                const data = await apiRequest('/login', {
+                    method: 'POST',
+                    body: JSON.stringify({ email, password })
+                });
+                
+                localStorage.setItem('token', data.token);
+                window.location.href = '/app/profile.html';
+            } catch (err) {
+                showError(err.message);
+            }
+        }
+
+        async function register() {
+            const name = document.getElementById('regName').value;
+            const username = document.getElementById('regUsername').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const passwordConfirmation = document.getElementById('regPasswordConfirmation').value;
+            
+            if (!name || !username || !email || !password || !passwordConfirmation) {
+                showError('Заполните все поля');
+                return;
+            }
+            
+            if (password !== passwordConfirmation) {
+                showError('Пароли не совпадают');
+                return;
+            }
+            
+            try {
+                const data = await apiRequest('/register', {
+                    method: 'POST',
+                    body: JSON.stringify({ 
+                        name, 
+                        username, 
+                        email, 
+                        password, 
+                        password_confirmation: passwordConfirmation 
+                    })
+                });
+                
+                localStorage.setItem('token', data.token);
+                window.location.href = '/app/profile.html';
+            } catch (err) {
+                showError(err.message);
+            }
+        }
+    </script>
+</body>
+</html>

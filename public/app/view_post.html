@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>запись</title>
+    <style>
+        body {
+            background: #f3efe8;
+            font-family: 'Inter', sans-serif;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+        .post-card {
+            max-width: 600px;
+            width: 100%;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 2.5rem;
+            padding: 2rem;
+        }
+        .meta {
+            color: #8f7e6e;
+            margin-bottom: 1rem;
+        }
+        .content {
+            color: #2a2f2b;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="post-card" id="postContainer">
+        <div class="meta" id="postMeta">загрузка...</div>
+        <div class="content" id="postContent"></div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        const urlParams = new URLSearchParams(window.location.search);
+        const postId = urlParams.get('id');
+
+        if (!postId) {
+            document.getElementById('postContainer').innerHTML = 'пост не найден';
+        }
+
+        async function loadPost() {
+            try {
+                const response = await fetch('/api/posts/' + postId, {
+                    headers: token ? { 'Authorization': 'Bearer ' + token } : {}
+                });
+                const post = await response.json();
+                
+                document.getElementById('postMeta').innerHTML = `
+                    ${post.user?.name || 'пользователь'}  ${new Date(post.created_at).toLocaleDateString()}
+                `;
+                document.getElementById('postContent').textContent = post.content;
+            } catch (err) {
+                document.getElementById('postContainer').innerHTML = 'ошибка загрузки';
+            }
+        }
+
+        loadPost();
+    </script>
+</body>
+</html>

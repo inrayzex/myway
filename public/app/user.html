@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Путь  пользователь</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f3efe8;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+            color: #2a2f2b;
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .profile-card {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 1rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(180, 160, 140, 0.2);
+            color: #a49888;
+            font-size: 0.85rem;
+            width: 100%;
+        }
+
+        .profile-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+        }
+
+        .profile-sidebar {
+            background: rgba(250, 245, 240, 0.7);
+            border-radius: 1rem;
+            padding: 1rem;
+            border: 1px solid rgba(180, 160, 140, 0.15);
+            backdrop-filter: blur(4px);
+            align-self: start;
+        }
+
+        .profile-main {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .avatar-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .avatar-placeholder {
+            width: 160px;
+            height: 160px;
+            background: linear-gradient(145deg, #d9c8b8, #b7a48f);
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 15px 25px -8px rgba(90, 70, 50, 0.2);
+            border: 3px solid white;
+            font-size: 1rem;
+            color: #4d3b2c;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            overflow: hidden;
+        }
+
+        .user-status {
+            background: rgba(220, 200, 180, 0.3);
+            border-radius: 100px;
+            padding: 0.4rem 1.2rem;
+            display: inline-block;
+            font-size: 0.9rem;
+            color: #5f4c3b;
+            border: 1px solid rgba(140, 110, 80, 0.2);
+            margin-bottom: 1rem;
+        }
+
+        .user-name {
+            font-size: 1.8rem;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            color: #2e3b32;
+            margin-bottom: 0.25rem;
+        }
+
+        .user-handle {
+            color: #7b6b5c;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .quote-micro {
+            font-style: italic;
+            color: #726a5f;
+            font-size: 0.9rem;
+            border-left: 2px solid #b4aa9b;
+            padding-left: 1rem;
+            margin: 1rem 0;
+        }
+
+        .practice-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .practice-tag {
+            background: #e7ddd2;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            color: #3d4a40;
+            border: 1px solid #cbb9a8;
+        }
+
+        .current-askesa {
+            background: rgba(200, 180, 160, 0.2);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border: 1px solid rgba(160, 130, 100, 0.2);
+        }
+
+        .askesa-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #4d6240;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .progress-bar-bg {
+            background: #dbcfc1;
+            height: 12px;
+            border-radius: 20px;
+            width: 100%;
+            margin: 0.75rem 0;
+        }
+
+        .progress-fill {
+            height: 12px;
+            background: #7f9a6b;
+            border-radius: 20px;
+            box-shadow: inset 0 1px 2px rgba(255,255,255,0.3);
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            color: #4e5b47;
+            font-size: 0.9rem;
+        }
+
+        .privacy-row {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px dashed #d9cdc0;
+            font-size:0.85rem;
+            color:#786e62;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .tracker-grid {
+            background: rgba(245, 240, 235, 0.6);
+            border-radius: 2rem;
+            padding: 1.8rem;
+            border: 1px solid rgba(180, 160, 140, 0.15);
+        }
+
+        .tracker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .tracker-header h3 {
+            font-size: 1.4rem;
+            font-weight: 450;
+            color: #3a4a3a;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .cal-day {
+            aspect-ratio: 1 / 1;
+            background: #e5dcd2;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #7d6b5a;
+            border: 1px solid #cfc1b4;
+        }
+
+        .cal-day.filled {
+            background: #9fb893;
+            color: #2e402a;
+            border-color: #6f8b5f;
+        }
+
+        .streak-info {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            background: #efe7df;
+            border-radius: 60px;
+            padding: 0.8rem 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .streak-item {
+            text-align: center;
+        }
+
+        .streak-value {
+            font-size: 1.5rem;
+            font-weight: 450;
+            color: #3f543f;
+        }
+
+        .streak-label {
+            font-size: 0.8rem;
+            color: #6b6258;
+        }
+
+        .diary-section {
+            background: rgba(240, 235, 225, 0.5);
+            border-radius: 1rem;         
+        }
+        .diary-section h3 {
+            padding-left: 1rem;
+            margin-top: 1.2rem;
+         }
+
+        .diary-entry {
+            background: white;
+            border-radius: 1rem;            
+            margin-bottom: 1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            border: 1px solid #ede3d8;
+        }
+
+        .entry-meta {
+            display: flex;
+            gap: 1rem;
+            color: #8f7e6e;
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+            padding-left: 1rem;
+            padding-top: 1rem;
+        }
+
+        .entry-image {
+            margin: 1rem 0;         
+            overflow: hidden;
+            background: #f0e8e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e0d2c4;
+        }
+
+        .entry-image img {
+            max-width: 100%;
+            height: auto;
+            max-height: 500px;
+            display: block;
+            
+        }
+
+        .image-placeholder {
+            background: #d9cdc0;
+            width: 100%;
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #5f5348;
+            font-size: 0.9rem;
+            background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.2) 0px, rgba(255,255,255,0.2) 10px, rgba(200,180,160,0.2) 10px, rgba(200,180,160,0.2) 20px);
+        }
+
+        .entry-content {
+            color: #363f34;
+            font-size: 1rem;
+            line-height: 1.6;
+            padding-left: 1rem;
+        }
+
+        .entry-actions {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1.5rem;
+            color: #917f6e;
+            font-size: 0.9rem;
+            padding-left: 1rem;
+        }
+
+        .follow-btn {
+            background: #d8cdbf;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        @media (max-width: 700px) {
+            body { align-items: flex-start; }
+            .profile-card { padding: 0.7rem; }
+            .profile-layout { grid-template-columns: 1fr; }
+            .calendar-grid { gap: 4px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="profile-card">
+    <div class="nav-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; color: #8d7f71; border-bottom: 1px solid #e4d9cf; padding-bottom: 0.8rem;">
+<span onclick="window.location.href='/app/profile.html'" style="cursor:pointer;font-weight: 500;">мой путь</span>
+        <div style="display: flex; gap: 1.5rem;">
+            <span onclick="window.location.href='/app/lenta.html'" style="cursor:pointer;">лента</span>
+            <span onclick="window.location.href='/app/club.html'" style="cursor:pointer;">клубы</span>
+            <span onclick="window.location.href='/app/knowledge.html'" style="cursor:pointer;">база</span>
+        </div>
+        <div onclick="window.location.href='/app/profile.html'" style="cursor:pointer;"></div>
+    </div>
+
+    <div class="profile-layout">
+        <div class="profile-sidebar">
+            <div class="avatar-section">
+                <div class="avatar-placeholder" id="avatar">
+                  <img id="avatarImage" src="" style="display:none; width:100%; height:100%; object-fit:cover;">
+                    <span id="avatarPlaceholder">фото</span>
+                </div>
+                
+
+                <div class="user-status" id="userStatus">загрузка...</div>
+                <div class="user-name" id="userName"></div>
+                <div class="user-handle" id="userHandle"></div>
+                <div class="quote-micro" id="userQuote"></div>
+                <button class="follow-btn" id="followBtn">загрузка...</button>
+            </div>
+
+            <div style="margin: 1.5rem 0;">
+                <div style="font-size: 0.9rem; color: #5e6b53; margin-bottom: 0.5rem;">практикую</div>
+                <div class="practice-tags" id="practiceTags">
+                    <span class="practice-tag">загрузка...</span>
+                </div>
+            </div>
+
+            <div class="current-askesa" id="currentAskesa" style="display: none;">
+                <div class="askesa-title"><span></span> <span id="askesaName"></span></div>
+                <div class="progress-bar-bg"><div class="progress-fill" id="askesaProgress" style="width: 0%;"></div></div>
+                <div class="stats-row">
+                    <span id="askesaDays"></span>
+                    <span id="askesaLeft"></span>
+                </div>
+                <div style="font-size:0.85rem; color: #6e7c64; margin-top:0.5rem;" id="askesaFriends"></div>
+            </div>
+
+           
+        </div>
+
+        <div class="profile-main">
+            <div id="trackersContainer"></div>
+
+            <div class="diary-section">
+                <h3 style="font-size:1.3rem; font-weight: 450; margin-bottom: 1.2rem;">дневник</h3>
+                <div id="postsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        каждый день&nbsp;&#183;&nbsp;шаг на пути
+    </div>
+</div>
+
+<script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = '/';
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get('id');
+    if (!userId) {
+        alert('ID пользователя не указан');
+        window.location.href = '/app/lenta.html';
+    }
+
+    let currentUser = null;
+
+    async function apiRequest(url, options = {}) {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token,
+            ...options.headers
+        };
+        const response = await fetch('/api' + url, { ...options, headers });
+        if (!response.ok) {
+            const text = await response.text();
+            throw new Error(text);
+        }
+        return response.json();
+    }
+
+
+
+
+
+async function loadProfile() {
+    try {
+        currentUser = await apiRequest('/users/' + userId);
+        
+        document.getElementById('userName').textContent = currentUser.name;
+        document.getElementById('userHandle').textContent = '@' + (currentUser.username || 'unknown');
+        document.getElementById('userQuote').textContent = '"' + (currentUser.quote || 'нет цитаты') + '"';
+        document.getElementById('userStatus').textContent = currentUser.status || 'ищущий';
+        
+        if (currentUser.avatar_url) {
+            const avatarImg = document.getElementById('avatarImage');
+            const avatarPlaceholder = document.getElementById('avatarPlaceholder');
+            avatarImg.src = '/storage/' + currentUser.avatar_url;
+            avatarImg.style.display = 'block';
+            avatarPlaceholder.style.display = 'none';
+        }
+        
+        const followBtn = document.getElementById('followBtn');
+        followBtn.textContent = currentUser.is_following ? 'отписаться' : 'подписаться';
+        followBtn.onclick = async () => {
+            try {
+                if (followBtn.textContent === 'подписаться') {
+                    await apiRequest('/users/' + userId + '/follow', { method: 'POST' });
+                    followBtn.textContent = 'отписаться';
+                    currentUser.is_following = true;
+                } else {
+                    await apiRequest('/users/' + userId + '/unfollow', { method: 'DELETE' });
+                    followBtn.textContent = 'подписаться';
+                    currentUser.is_following = false;
+                }
+            } catch (err) {
+                alert('Ошибка');
+            }
+        };
+
+        // Загружаем практики пользователя
+        const practices = await apiRequest('/practices?user_id=' + userId);
+        renderPractices(practices);
+
+        // Загружаем посты пользователя
+        const posts = await apiRequest('/posts?user_id=' + userId);
+        renderPosts(posts);
+
+    } catch (err) {
+        console.error(err);
+        alert('Ошибка загрузки профиля');
+    }
+}
+
+
+
+
+    function renderPractices(practices) {
+        const tagsContainer = document.getElementById('practiceTags');
+        tagsContainer.innerHTML = '';
+        practices.slice(0, 5).forEach(p => {
+            const tag = document.createElement('span');
+            tag.className = 'practice-tag';
+            tag.textContent = p.name;
+            tagsContainer.appendChild(tag);
+        });
+
+        const askesa = practices.find(p => p.goal_days);
+        if (askesa) {
+            document.getElementById('currentAskesa').style.display = 'block';
+            document.getElementById('askesaName').textContent = askesa.name;
+            const completed = askesa.logs?.length || 0;
+            const total = askesa.goal_days;
+            const progress = (completed / total) * 100;
+            document.getElementById('askesaProgress').style.width = progress + '%';
+            document.getElementById('askesaDays').textContent = `день ${completed} / ${total}`;
+            document.getElementById('askesaLeft').textContent = `${total - completed} дней осталось`;
+            document.getElementById('askesaFriends').innerHTML = `+3 друга практикуют`;
+        }
+
+        const trackersContainer = document.getElementById('trackersContainer');
+        trackersContainer.innerHTML = '';
+        practices.slice(0, 2).forEach(p => {
+            const logs = p.logs || [];
+            const last7 = logs.slice(-7).map(l => new Date(l.completed_at).getDate());
+            const streak = calculateStreak(logs);
+            const total = logs.reduce((acc, l) => acc + (l.value || 0), 0);
+
+            const trackerHtml = `
+                <div class="tracker-grid">
+                    <div class="tracker-header">
+                        <h3>${p.name}</h3>
+                    </div>
+                    <div class="calendar-grid">
+                        ${renderCalendar(last7)}
+                    </div>
+                    <div class="streak-info">
+                        <div class="streak-item"><span class="streak-value">${streak}</span> <span class="streak-label">дней подряд</span></div>
+                        <div class="streak-item"><span class="streak-value">${Math.round((logs.length / 30) * 100)}%</span> <span class="streak-label">месяц</span></div>
+                        <div class="streak-item"><span class="streak-value">${total}${p.goal_unit ? ' ' + p.goal_unit : ''}</span> <span class="streak-label">всего</span></div>
+                    </div>
+                </div>
+            `;
+            trackersContainer.insertAdjacentHTML('beforeend', trackerHtml);
+        });
+    }
+
+    function renderCalendar(days) {
+        let html = '';
+        for (let i = 1; i <= 28; i++) {
+            const filled = days.includes(i) ? 'filled' : '';
+            html += `<div class="cal-day ${filled}">${i}</div>`;
+        }
+        return html;
+    }
+
+    function calculateStreak(logs) {
+        if (!logs.length) return 0;
+        let streak = 1;
+        for (let i = logs.length - 1; i > 0; i--) {
+            const diff = new Date(logs[i].completed_at) - new Date(logs[i-1].completed_at);
+            if (diff < 86400000 * 2) streak++;
+            else break;
+        }
+        return streak;
+    }
+
+    
+
+
+
+        function renderPosts(posts) {
+        const container = document.getElementById('postsContainer');
+        container.innerHTML = '';
+        if (!Array.isArray(posts) || posts.length === 0) {
+            container.innerHTML = '<p>Нет записей</p>';
+            return;
+        }
+        posts.slice(0, 3).forEach(p => {
+            const postHtml = `
+                <div class="diary-entry">
+                    <div class="entry-meta">
+                        <span>${new Date(p.created_at).toLocaleDateString()}</span>
+                        <span>${p.type || 'запись'}</span>
+                    </div>
+                    ${p.photo_url ? `
+                    <div class="entry-image">
+                        <img src="/storage/${p.photo_url}" alt="post photo">
+                    </div>
+                    ` : ''}
+                    <div class="entry-content">${p.content}</div>
+                    <div class="entry-actions">
+                        <span>&#10084; ${p.likes_count || 0}</span>
+                        <span>&#128172; ${p.comments_count || 0}</span>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', postHtml);
+        });
+    }
+
+    loadProfile();
+</script>
+</body>
+</html>

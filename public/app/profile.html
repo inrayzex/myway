@@ -1,0 +1,2690 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Путь  профиль</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f3efe8;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+            color: #2a2f2b;
+            padding: 2rem 1rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;            
+        }
+
+
+.page-wrapper {
+    max-width: 100%;
+    overflow-x: hidden;
+    margin: 0 auto; 
+    padding: 1rem;
+    position: relative;
+}
+
+.dnevnik-tohude{
+     display:block;
+}
+
+        .profile-card {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 1rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(180, 160, 140, 0.2);
+            color: #a49888;
+            font-size: 0.85rem;
+            width: 100%;
+        }
+
+        .profile-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+        }
+
+        .profile-sidebar {
+            background: rgba(250, 245, 240, 0.7);
+            border-radius: 1rem;
+            padding-top: 1.8rem;
+            padding-right: 1.6rem;
+            padding-left: 1.6rem;
+            border: 1px solid rgba(180, 160, 140, 0.15);
+            backdrop-filter: blur(4px);
+            align-self: start;
+        }
+
+        .profile-main {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .avatar-section {
+            display:flex;
+            align-items: center;
+            text-align: center;
+         /*   margin-bottom: 2rem;*/
+        }
+
+        .avatar-placeholder {
+            width: 104px;
+            height: 104px;
+            background: linear-gradient(145deg, #d9c8b8, #b7a48f);
+            border-radius: 50%;
+        /*    margin: 0 auto 1.5rem;*/
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 15px 25px -8px rgba(90, 70, 50, 0.2);
+            border: 3px solid white;
+            font-size: 1rem;
+            color: #4d3b2c;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .avatar-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-status {
+        /*    background: rgba(220, 200, 180, 0.3);*/
+            border-radius: 100px;
+            padding: 0.4rem 1.2rem;
+            display: inline-block;
+            font-size: 0.9rem;
+            color: #5f4c3b;
+            border: 1px solid rgba(140, 110, 80, 0.2);
+            margin-bottom: 1rem;
+        }
+
+        .user-name {
+            font-size: 1.4rem;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            color: #2e3b32;
+            margin-bottom: 0.25rem;
+        }
+
+        .quote-micro {
+            font-style: italic;
+            color: #726a5f;
+            font-size: 0.9rem;
+            border-left: 2px solid #b4aa9b;
+        /*    padding-left: 1rem;*/
+            margin: 1rem 0;
+        }
+
+        .friends-link {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .friends-link a {
+            color: #7b6b5c;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .practice-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .practice-tag {
+        /*    background: #e7ddd2;*/
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            color: #3d4a40;
+            border: 1px solid #cbb9a8;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .practice-tag:active {
+            transform: scale(0.95);
+            background: #d2c0ae;
+        }
+
+        .current-askesa {
+            background: rgba(200, 180, 160, 0.2);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border: 1px solid rgba(160, 130, 100, 0.2);
+        }
+
+        .askesa-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #4d6240;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .progress-bar-bg {
+            background: #dbcfc1;
+            height: 12px;
+            border-radius: 20px;
+            width: 100%;
+            margin: 0.75rem 0;
+        }
+
+        .progress-fill {
+            height: 12px;
+            background: #7f9a6b;
+            border-radius: 20px;
+            box-shadow: inset 0 1px 2px rgba(255,255,255,0.3);
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            color: #4e5b47;
+            font-size: 0.9rem;
+        }
+
+        .diary-section {
+          /*  background: rgba(240, 235, 225, 0.5);*/
+            border-radius: 1rem;
+           /* padding: 1.8rem;*/
+        }
+
+        .diary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .diary-header h3 {
+            font-size: 1.3rem;
+            font-weight: 450;
+            color: #2e3b32;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid #cbb9a8;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            color: #5e6b53;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background: #b8a48f;
+            color: white;
+            border-color: #8f7a64;
+        }
+
+       /* .diary-entry {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            border: 1px solid #ede3d8;
+            position: relative;
+        }*/
+
+        .entry-meta {
+            display: flex;
+            gap: 1rem;
+            color: #8f7e6e;
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+            padding-left: 1rem;
+            padding-top: 1rem;
+        }
+
+        .privacy-badge {
+            background: #e7ddd2;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #5f4c3b;
+        }
+
+        .entry-image {
+            margin: 1rem 0;
+        /*    border-radius: 1rem;*/
+            overflow: hidden;
+            background: #f0e8e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e0d2c4;
+        }
+
+        .entry-image img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .entry-content {
+            color: #363f34;
+            font-size: 1rem;
+            line-height: 1.6;
+            padding-left: 1rem;
+        }
+
+        .entry-actions {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            color: #917f6e;
+            align-items: center;
+            padding-left: 1rem;
+            padding-bottom: 1rem;
+        }
+
+        .entry-actions span {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .menu-btn {
+            margin-left: auto;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.5rem;
+            position: relative;
+        }
+
+        .menu-btn:hover {
+            background: #f0e8e0;
+        }
+
+        
+
+
+.diary-entry {
+    position: relative;
+    background: white;
+    border-radius: 1rem;
+  /*  padding: 1.5rem;*/
+    margin-bottom: 1rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+    border: 1px solid #ede3d8;
+}
+
+.post-menu {
+    position: absolute;
+    right: 1rem;
+    top: 3rem; /* Отступ от верхнего края карточки */
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border: 1px solid #e0d3c5;
+    z-index: 1000;
+    min-width: 200px;
+}
+
+
+
+.post-menu.bottom {
+    top: auto;
+    bottom: 2.5rem;
+}
+        .post-menu-item {
+            padding: 0.8rem 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #2f4033;
+            transition: background 0.2s;
+        }
+
+        .post-menu-item:first-child {
+            border-radius: 1rem 1rem 0 0;
+        }
+
+        .post-menu-item:last-child {
+            border-radius: 0 0 1rem 1rem;
+        }
+
+        .post-menu-item:hover {
+            background: #f0e8e0;
+        }
+
+        .post-menu-item.delete:hover {
+            color: #b91c1c;
+        }
+
+        .action-btn {
+            background: #d8cdbf;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 3rem;
+            font-size: 1rem;
+            color: #2f3e32;
+            cursor: pointer;
+            width: 100%;
+            border: 1px solid rgba(255,255,255,0.6);
+            transition: 0.2s;
+            margin-bottom: 1.5rem;
+        }
+
+        .action-btn:hover {
+            background: #c2b3a1;
+        }
+
+        .logout-btn {
+            background: #d8cdbf;
+            border: none;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            color: #8d7f71;
+            border-bottom: 1px solid #e4d9cf;
+            padding-bottom: 0.8rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links span {
+            cursor: pointer;
+        }
+
+        .user-section {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .settings-link {
+            cursor: pointer;
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
+        }
+
+        .practices-slider {
+            width: 100%;
+            position: relative;
+          /*  margin-bottom: 2rem;*/
+        }
+
+        .practices-tabs {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            padding: 0 0.5rem;
+        }
+
+        .practice-tab {
+            background: #e7ddd2;
+            border: 1px solid #cbb9a8;
+            padding: 0.2rem 0.6rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            color: #3d4a40;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .practice-tab.active {
+            background: #b8a48f;
+            color: #2e3b2e;
+            border-color: #8f7a64;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            width: 100%;
+        }
+
+        .slider-track {
+            flex: 1;
+            overflow: hidden;
+            border-radius: 1rem;
+            min-height: 350px;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+            transition: transform 0.3s ease;
+            background: rgba(245, 240, 235, 0.6);
+            border-radius: 1rem;
+            padding: 1rem;
+            border: 1px solid rgba(180, 160, 140, 0.15);
+        }
+
+        .slide.prev {
+            transform: translateX(-100%);
+        }
+
+        .slide.next {
+            transform: translateX(100%);
+        }
+
+        .slide.active {
+            transform: translateX(0);
+            position: relative;
+        }
+
+        .slider-arrow {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #d8cdbf;
+            border: 1px solid rgba(255,255,255,0.6);
+            color: #2f3e32;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .slider-arrow:hover {
+            background: #c2b3a1;
+        }
+
+        .slider-arrow:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .slider-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #cbb9a8;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .slider-dot.active {
+            width: 20px;
+            border-radius: 10px;
+            background: #7f9a6b;
+        }
+
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .slide-header h3 {
+            font-size: 1.4rem;
+            font-weight: 450;
+            color: #3a4a3a;
+        }
+
+        .mark-btn {
+            background: #d8cdbf;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            color: #2f3e32;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.6);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mark-btn.marked {
+            background: #7f9a6b;
+            color: white;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .cal-day {
+            aspect-ratio: 1 / 1;
+            background: #e5dcd2;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #7d6b5a;
+            border: 1px solid #cfc1b4;
+        }
+
+        .cal-day.filled {
+            background: #9fb893;
+            color: #2e402a;
+            border-color: #6f8b5f;
+        }
+
+        .weekly-progress {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(230, 220, 210, 0.3);
+            border-radius: 1.5rem;
+        }
+
+        .weekly-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            color: #5e6b53;
+            font-size: 0.9rem;
+        }
+
+        .weekly-bar {
+            height: 8px;
+            background: #dbcfc1;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .weekly-fill {
+            height: 100%;
+            background: #7f9a6b;
+            border-radius: 20px;
+            transition: width 0.3s ease;
+        }
+
+        .weekly-days-grid {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .week-day {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem;
+            min-width: 40px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 1rem;
+            border: 1px solid #e0d3c5;
+        }
+
+        .week-day.completed {
+            background: #9fb893;
+            border-color: #6f8b5f;
+        }
+
+        .week-day .day-name {
+            font-size: 0.8rem;
+            color: #5e6b53;
+        }
+
+        .week-day .day-status {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #3d4a40;
+        }
+
+        .week-day.completed .day-name,
+        .week-day.completed .day-status {
+            color: white;
+        }
+
+        .weekly-stats {
+            display: flex;
+            justify-content: space-between;
+            color: #7b6b5c;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .streak-info {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            background: #efe7df;
+            border-radius: 60px;
+            padding: 0.5rem 0.1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .streak-item {
+            text-align: center;
+        }
+
+        .streak-value {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #3f543f;
+        }
+
+        .streak-label {
+            font-size: 0.8rem;
+            color: #6b6258;
+        }
+
+        .archive-section {
+            margin-top: 1.5rem;
+            background: rgba(220, 200, 180, 0.1);
+            border-radius: 1.5rem;
+            padding: 0.5rem 0;
+        }
+
+        .archive-header {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #5e6b53;
+            font-weight: 500;
+            transition: background 0.2s;
+            border-radius: 1.5rem;
+            font-size: 0.9rem;
+            padding: 0.8rem 1.2rem;
+        }
+
+        .archive-header:hover {
+            background: rgba(180, 160, 140, 0.15);
+        }
+
+        .archive-count {
+            background: #e7ddd2;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .archive-content {
+            padding: 0 1.5rem 1rem 1.5rem;
+        }
+
+        .archive-list {
+            max-height: 250px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .archive-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .archive-list::-webkit-scrollbar-track {
+            background: #e5dcd2;
+            border-radius: 10px;
+        }
+
+        .archive-list::-webkit-scrollbar-thumb {
+            background: #b7a48f;
+            border-radius: 10px;
+        }
+
+        .archive-item {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #e0d3c5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .archive-item:hover {
+            background: rgba(180, 160, 140, 0.1);
+            border-radius: 1rem;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .archive-item:last-child {
+            border-bottom: none;
+        }
+
+        .archive-item-name {
+            color: #3d4a40;
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .archive-item-name span:first-child {
+            font-weight: 500;
+        }
+
+        .archive-item-name span:last-child {
+            font-size: 0.8rem;
+            color: #7b6b5c;
+        }
+
+        .archive-item-date {
+            color: #7b6b5c;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        .archive-loader {
+            text-align: center;
+            padding: 1rem;
+            color: #7b6b5c;
+            font-size: 0.9rem;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 2rem;
+            max-width: 320px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .modal-content h3 {
+            font-size: 1.3rem;
+            font-weight: 450;
+            color: #2e3b32;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-content p {
+            color: #5e6b53;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .modal-btn.confirm {
+            background: #e7ddd2;
+            color: #2f3e32;
+        }
+
+        .modal-btn.confirm:hover {
+            background: #d2c0ae;
+        }
+
+        .modal-btn.cancel {
+            background: #f0ebe4;
+            color: #786e62;
+        }
+
+        .modal-btn.cancel:hover {
+            background: #e5dbd1;
+        }
+
+          @media (max-width: 768px) {
+            .profile-layout {
+                grid-template-columns: 1fr;
+            }
+            .slider-arrow {
+                display: none;
+            }
+            .slider-track {
+                width: 100%;
+            }
+            .diary-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 700px) {
+            body { padding: 0.5rem; align-items: flex-start; }
+            .profile-card { padding: 0.7rem; }
+            .calendar-grid { gap: 4px; }
+            .slide-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+
+.comments-section {
+/*    margin-top: 1.5rem;*/
+    padding-top: 1rem;
+    border-top: 2px dashed #e0d3c5;
+}
+
+.comment-item {
+    background: #f8f4f0;
+    border-radius: 1rem;
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.8rem;
+    margin-left: 1.5rem;   
+    border: 1px solid #ede3d8;
+    position: relative;
+}
+
+.comment-item::before {
+    content: '';
+    position: absolute;
+    left: -1rem;
+    top: 1rem;
+    width: 0.8rem;
+    height: 1px;
+    background: #e0d3c5;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.3rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.comment-author {
+    font-weight: 600;
+    color: #4a5a4a;
+    font-size: 0.9rem;
+}
+
+.comment-handle {
+    font-size: 0.7rem;
+    color: #9a8b7a;
+    margin-left: 0.3rem;
+}
+
+.comment-date {
+    font-size: 0.7rem;
+    color: #9a8b7a;
+}
+
+.comment-text {
+    color: #2f4033;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.comment-delete {
+    background: none;
+    border: none;
+    color: #b77c7c;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.5rem;
+}
+
+.comment-delete:hover {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.show-more-btn {
+    background: transparent;
+    border: 1px solid #cbb9a8;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    color: #5e6b53;
+    cursor: pointer;
+    margin: 0.5rem 0 1rem 1.5rem;
+    display: inline-block;
+}
+
+.show-more-btn:hover {
+    background: #e7ddd2;
+}
+
+
+
+
+
+
+
+/* Анимированная кнопка гамбургера */
+.hamburger-icon {
+    color:#8d7f71;
+    width: 30px;
+    height: 20px;
+    position: relative;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.hamburger-icon span {
+    display: block;
+    position: absolute;
+    height: 1px;
+    width: 100%;
+    background: #8d7f71;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.hamburger-icon span:nth-child(1) {
+    top: 0;
+}
+
+.hamburger-icon span:nth-child(2) {
+    top: 8px;
+}
+
+.hamburger-icon span:nth-child(3) {
+    top: 16px;
+}
+
+/* Анимация превращения в крестик */
+.hamburger-icon.open span:nth-child(1) {
+    transform: rotate(45deg);
+    top: 8px;
+}
+
+.hamburger-icon.open span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-icon.open span:nth-child(3) {
+    transform: rotate(-45deg);
+    top: 8px;
+}
+
+/* Затемняющий фон */
+.menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.menu-overlay.show {
+    display: block;
+    opacity: 1;
+}
+
+/* Меню справа */
+.side-menu {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 280px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-left: 1px solid rgba(180, 160, 140, 0.2);
+    z-index: 1001;
+    transition: right 0.3s ease;
+    padding: 2rem 1.5rem;
+    pointer-events: none; /*  добавить */
+}
+
+.side-menu.open {
+    right: 0;
+    pointer-events: auto; /*  добавить */
+}
+
+
+
+.side-menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e4d9cf;
+}
+
+.menu-logo {
+   /* font-size: 1.3rem;
+    font-weight: 500;*/
+    color: #2e3b32;
+}
+
+.side-menu-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.side-menu-items a {
+    color: #8d7f71;
+    text-decoration: none;
+    font-size: 1.1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(180, 160, 140, 0.2);
+ 
+}
+
+
+
+.side-menu-items a.animate {
+    transform: translateX(20px);
+    opacity: 0;
+    animation: slideIn 0.3s ease forwards;
+}
+
+@keyframes slideIn {
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+
+.menu-close {
+font-size: 1.3rem;
+ cursor: pointer;
+color: #8d7f71; 
+padding: 0.3rem 0.5rem;
+border-radius: 50%;
+}
+
+
+
+@keyframes slideIn {
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.side-menu-items a:hover {
+    color: #2e3b32;
+    padding-left: 0.5rem;
+}
+
+/* Десктоп версия */
+.nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    color: #8d7f71;
+    border-bottom: 1px solid #e4d9cf;
+    padding-bottom: 0.8rem;
+}
+
+/* Медиазапросы */
+@media (max-width: 768px) {
+    .nav-bar {
+        display: none !important;
+    }
+    .mobile-header {
+        color: #8d7f71;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding-bottom: 0.4rem;    
+        padding-left: 1rem;
+        padding-right: 1rem;
+       
+    }
+      .dnevnik-tohide {
+            display: none;
+       }
+}
+
+@media (min-width: 769px) {
+    .mobile-header, .side-menu, .menu-overlay {
+        display: none !important;
+    }
+}
+
+
+@media (max-width: 768px) {
+    html, body {
+        max-width: 100%;
+        overflow-x: hidden;
+        position: relative;
+    }
+       .diary-section{
+           padding: 0rem;
+        }
+
+}
+
+@media (min-width: 769px) {
+    html, body {
+        overflow-x: visible;
+    }
+}
+
+@media (min-width: 769px) {
+    .mobile-header, .side-menu, .menu-overlay {
+        display: none !important;
+    }
+}
+
+
+html, body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: relative;
+}
+
+/* Страховка от лишних отступов */
+* {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+
+@media (max-width: 768px) {
+    #currentAskesa {
+        display: none !important;
+    }
+    #mobileAskesas {
+        display: block !important;
+        margin: 1rem 0;
+    }
+  .profile-sidebar {  
+       padding: 1rem;
+
+     }
+}
+
+.practice-menu-item {
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background 0.2s;
+}
+
+.practice-menu-item:hover {
+    background: #f0e8e0;
+}
+
+.practice-menu-item.delete:hover {
+    color: #b91c1c;
+}
+
+
+.mobile-tabs {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0 0.5rem;
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 100;
+    border-radius: 3rem;
+    padding: 0.3rem;
+    border: 1px solid rgba(180, 160, 140, 0.2);
+}
+
+.mobile-tab {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 0.2rem 0;
+    border-radius: 3rem;
+    font-size: 1rem;
+    color: #8d7f71;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 450;
+}
+
+.mobile-tab.active {
+    background: #b8a48f;
+    color: white;
+}
+
+.mobile-section {
+    display: none;
+}
+
+.mobile-section.active {
+    display: block;
+}
+
+/* Скрываем табы на десктопе */
+@media (min-width: 769px) {
+    .mobile-tabs {
+        display: none;
+    }
+}
+
+/* Показываем оба раздела на десктопе */
+@media (min-width: 769px) {
+    .mobile-section {
+        display: block !important;
+    }
+}
+
+
+
+    </style>
+</head>
+<body>
+
+<div class="profile-card">
+
+
+
+
+<!-- Кнопка гамбургера с анимацией -->
+<div class="mobile-header">
+  <div>
+      <span onclick="window.location.href='/app/profile.html'" style="font-weight: 500; cursor:pointer;">мой путь</span>      
+  </div>
+    <div class="hamburger-icon" id="hamburgerBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</div>
+
+<!-- Затемняющий фон -->
+<div class="menu-overlay" id="menuOverlay"></div>
+
+<!-- Меню справа -->
+<div class="side-menu" id="sideMenu">
+    <div class="side-menu-header">
+        <span class="menu-logo">мой путь</span>        
+         <span class="menu-close" id="closeMenuBtn">&#10005;</span>
+    </div>
+    <div class="side-menu-items">
+        <a href="/app/lenta.html" style="animation-delay: 0.1s">лента</a>
+        <a href="/app/clubs.html" style="animation-delay: 0.2s">клубы</a>
+        <a href="/app/knowledge.html" style="animation-delay: 0.3s">база</a>
+        <a href="/app/friends.html" style="animation-delay: 0.3s">друзья</a>
+        <a href="/app/archived-askesas.html" style="animation-delay: 0.4s">архив аскез</a>
+        <a href="/app/settings.html" style="animation-delay: 0.5s">настройки профиля</a>
+        <a href="#" onclick="logout()" style="animation-delay: 0.6s">выйти</a>
+    </div>
+</div>
+
+
+
+     <div class="nav-bar">
+        <span onclick="window.location.href='/app/profile.html'" style="font-weight: 500; cursor:pointer;">мой путь</span>
+        <div class="nav-links">          
+            <span onclick="window.location.href='/app/friends.html'">друзья</span>
+            <span onclick="window.location.href='/app/lenta.html'">лента</span>
+            <span onclick="window.location.href='/app/clubs.html'">клубы</span>
+            <span onclick="window.location.href='/app/knowledge.html'">база</span>
+            <span onclick="window.location.href='/app/archived-askesas.html'">архив аскез</span>
+        </div>
+        <div class="user-section">
+            <span class="settings-link" onclick="window.location.href='/app/settings.html'">&#9881;</span>
+            <button class="logout-btn" onclick="logout()">выйти</button>
+        </div>
+    </div> 
+
+    <div class="profile-layout">
+        
+
+<!-- Side Block -->
+
+
+
+         <div class="profile-sidebar">
+
+            <div class="avatar-section">
+
+                <div class="avatar-placeholder" id="avatar">
+                    <img id="avatarImage" src="" style="display:none;">
+                    <span id="avatarPlaceholder">фото</span>
+                </div>
+                   <div style="margin:0 auto;">
+                     <div class="user-name" id="userName"></div>                
+                     <div class="user-status" id="userStatus"></div>
+                     <div class="quote-micro" id="userQuote"></div>
+                  </div>
+             </div> 
+               
+                       <div id="currentAskesa" style="display: none;"></div> 
+       
+       </div>
+
+
+
+
+
+<div class="profile-main">
+    
+    <!-- ТАБЫ ДЛЯ МОБИЛЬНОЙ ВЕРСИИ -->
+    <div class="mobile-tabs">
+        <button class="mobile-tab active" onclick="switchMobileTab('asks')">практики</button>
+        <button class="mobile-tab" onclick="switchMobileTab('diary')">дневник</button>
+    </div>
+    
+    <!-- СЕКЦИЯ С АСКЕЗАМИ (слайдер) -->
+    <div id="mobileAskesSection" class="mobile-section active">
+        <div id="sliderWrapper" style="display: none;">
+            <div class="practices-slider">
+                <div class="practices-tabs" id="practiceTabs"></div>
+                <div class="slider-container">
+                    <button class="slider-arrow prev" onclick="prevSlide()" id="prevArrow">&#10094;</button>
+                    <div class="slider-track" id="sliderTrack"></div>
+                    <button class="slider-arrow next" onclick="nextSlide()" id="nextArrow">&#10095;</button>
+                </div>
+                <div class="slider-dots" id="sliderDots"></div>
+            </div>
+        </div>
+       <!-- <button class="action-btn" onclick="window.location.href='/app/practice.html'"> -->
+            <button class="action-btn" onclick="openNewPractice()">
+            новая практика
+        </button>
+        <div class="mobile-askesas" id="mobileAskesas" style="display: none;"></div>
+    </div>
+    
+    <!-- СЕКЦИЯ С ДНЕВНИКОМ -->
+    <div id="mobileDiarySection" class="mobile-section">
+
+     <button class="action-btn" onclick="openNewPost()">новая запись</button>
+
+        <div class="diary-section">
+            <div class="diary-header">
+                <h3 class="dnevnik-tohide">дневник</h3>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" onclick="filterPosts('all')">все</button>
+                    <button class="filter-btn" onclick="filterPosts('private')">личное</button>
+                    <button class="filter-btn" onclick="filterPosts('public')">общее</button>
+                </div>
+            </div>
+            <div id="postsContainer"></div>      
+        </div>
+    </div>
+    
+</div>
+
+
+
+
+
+    </div>
+
+    <div class="footer-note">
+        каждый день&nbsp;&#183;&nbsp;шаг на пути
+    </div>
+</div>
+
+<div class="modal" id="deleteModal">
+    <div class="modal-content">
+        <h3>Удалить практику?</h3>
+        <p id="deletePracticeName"></p>
+        <div class="modal-buttons">
+            <button class="modal-btn confirm" onclick="confirmDelete()">Да, удалить</button>
+            <button class="modal-btn cancel" onclick="closeDeleteModal()">Отмена</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="deleteArchiveModal">
+    <div class="modal-content">
+        <h3>Удалить из архива?</h3>
+        <p id="deleteArchiveName"></p>
+        <div class="modal-buttons">
+            <button class="modal-btn confirm" onclick="confirmArchiveDelete()">Да, удалить</button>
+            <button class="modal-btn cancel" onclick="closeArchiveDeleteModal()">Отмена</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = '/';
+    }
+
+    function logout() {
+        localStorage.removeItem('token');
+        window.location.href = '/';
+    }
+
+    let practices = [];
+    let currentSlide = 0;
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let practiceToDelete = null;
+    let archiveToDelete = null;    
+    let currentUser = null;
+    let allMyPosts = [];
+    let currentPostFilter = 'all';
+
+
+   // Восстанавливаем вкладку при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    // Небольшая задержка, чтобы DOM точно загрузился
+    setTimeout(restoreActiveTab, 100);
+});
+
+
+
+    const dayNames = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
+
+    async function apiRequest(url, options = {}) {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token,
+            ...options.headers
+        };
+        const response = await fetch('/api' + url, { ...options, headers });
+        if (!response.ok) {
+            const text = await response.text();
+            throw new Error(text);
+        }
+        return response.json();
+    }
+
+    async function loadProfile() {
+        try {
+            currentUser = await apiRequest('/user');
+            document.getElementById('userName').textContent = currentUser.name;
+            
+            const statusEl = document.getElementById('userStatus');
+            if (currentUser.status && currentUser.status.trim() !== '' && currentUser.status !== 'нет статуса') {
+                statusEl.textContent = currentUser.status;
+                statusEl.style.display = 'inline-block';
+            } else {
+                statusEl.style.display = 'none';
+            }
+            
+            const quoteEl = document.getElementById('userQuote');
+            if (currentUser.quote && currentUser.quote.trim() !== '') {
+                quoteEl.textContent = '"' + currentUser.quote + '"';
+                quoteEl.style.display = 'block';
+            } else {
+                quoteEl.style.display = 'none';
+            }
+
+            if (currentUser.avatar_url) {
+                const avatarImg = document.getElementById('avatarImage');
+                const avatarPlaceholder = document.getElementById('avatarPlaceholder');
+                
+                avatarImg.src = '/storage/' + currentUser.avatar_url;
+                avatarImg.style.display = 'block';
+                avatarPlaceholder.style.display = 'none';
+            }
+
+            practices = await apiRequest('/practices');
+            renderSidebar(practices);
+            renderSlider(practices);
+                        
+
+            const posts = await apiRequest('/posts');
+            allMyPosts = (posts.data || posts).filter(p => p.user_id === currentUser.id);
+            filterPosts('all');
+
+            initSwipe();
+
+
+            restoreActiveTab();
+
+        } catch (err) {
+            console.error(err);
+            alert('Ошибка загрузки профиля');
+        }
+    }
+
+
+
+    function renderSidebar(practices) {
+
+
+//delete practice
+
+
+
+        const activeAskesas = practices.filter(p => 
+            p.goal_days && !p.completed_at
+        );
+        const askesaContainer = document.getElementById('currentAskesa');
+
+
+        
+        if (activeAskesas.length > 0) {
+            askesaContainer.style.display = 'block';
+            askesaContainer.innerHTML = '';
+            
+            activeAskesas.forEach(askesa => {
+                const completed = askesa.logs?.length || 0;
+                const total = askesa.goal_days;
+                const progress = (completed / total) * 100;
+                
+                askesaContainer.insertAdjacentHTML('beforeend', `
+                    <div class="current-askesa" style="margin-bottom:1rem;">
+                        <div class="askesa-title"><span>&#x1F525;</span> ${askesa.name}</div>
+                        <div class="progress-bar-bg"><div class="progress-fill" style="width: ${progress}%;"></div></div>
+                        <div class="stats-row">
+                            <span>день ${completed} / ${total}</span>
+                            <span>${total - completed} дней осталось</span>
+                        </div>
+                    </div>
+                `);
+            });
+
+           const mobileAskesas = document.getElementById('mobileAskesas');
+                if (mobileAskesas) {
+                        mobileAskesas.innerHTML = askesaContainer.innerHTML;
+                       }
+
+        } else {
+            askesaContainer.style.display = 'none';
+        }
+    }
+
+
+
+
+
+function getRussianUnit(unit) {
+    if (!unit) return '';
+    
+    const units = {
+        'minutes': 'мин',
+        'hours': 'ч',
+        'km': 'км',
+        'times': 'раз',
+        'pages': 'стр'
+    };
+    return units[unit] || unit;
+}
+
+
+
+    function renderSlider(practices) {
+
+
+
+    const wrapper = document.getElementById('sliderWrapper');
+    const tabsContainer = document.getElementById('practiceTabs');
+    const trackContainer = document.getElementById('sliderTrack');
+    const dotsContainer = document.getElementById('sliderDots');
+    const prevArrow = document.getElementById('prevArrow');
+    const nextArrow = document.getElementById('nextArrow');
+
+
+
+
+    // Если элементов нет  выходим
+    if (!wrapper || !tabsContainer || !trackContainer) return;
+
+    const activePractices = practices.filter(p => !p.completed_at);
+
+    if (activePractices.length === 0) {
+        wrapper.style.display = 'none';
+        return;
+    } else {
+        wrapper.style.display = 'block';
+    }
+
+
+
+            if (currentSlide >= activePractices.length) {
+            currentSlide = 0;
+        }
+
+        
+        
+        tabsContainer.innerHTML = activePractices.map((p, i) => `
+            <button class="practice-tab ${i === currentSlide ? 'active' : ''}" 
+                    onclick="goToSlide(${i})">
+                ${p.name}
+            </button>
+        `).join('');
+        
+        trackContainer.innerHTML = activePractices.map((p, i) => {
+            const logs = p.logs || [];
+            const streak = calculateStreak(logs);
+            const total = logs.reduce((acc, l) => acc + (l.value || 0), 0);
+            const monthPercent = Math.round((logs.length / 30) * 100);
+            
+            const today = new Date().toDateString();
+            const todayLogs = logs.filter(log => 
+                new Date(log.completed_at).toDateString() === today
+            );
+            const isTodayMarked = todayLogs.length > 0;
+
+            let mainContent;
+            
+                
+
+
+if (p.period_type === 'weekly' && p.days_of_week && p.days_of_week.length > 0) {
+    // Еженедельная практика
+    const weekStart = new Date();
+const day = weekStart.getDay(); // 0 = вс, 1 = пн ... 6 = сб
+const diff = day === 0 ? 6 : day - 1; // сколько дней отнять до понедельника
+weekStart.setDate(weekStart.getDate() - diff);
+weekStart.setHours(0, 0, 0, 0); 
+
+    const weekLogs = logs.filter(log => {
+        const logDate = new Date(log.completed_at);
+        return logDate >= weekStart && logDate < new Date(weekStart.getTime() + 7 * 86400000);
+    });
+
+    const completedCount = weekLogs.length;
+    const totalDays = p.days_of_week.length;
+    const weekProgress = (completedCount / totalDays) * 100;
+
+    const daysHtml = p.days_of_week.map(dayNum => {
+        const dayName = dayNames[dayNum - 1];
+        const isCompleted = weekLogs.some(log => {
+            const logDay = new Date(log.completed_at).getDay();
+            const logDayNum = logDay === 0 ? 7 : logDay;
+            return logDayNum === dayNum;
+        });
+
+        return `
+            <div class="week-day ${isCompleted ? 'completed' : ''}">
+                <span class="day-name">${dayName}</span>
+                <span class="day-status">${isCompleted ? '' : ''}</span>
+            </div>
+        `;
+    }).join('');
+
+    mainContent = `
+        <div class="weekly-progress">
+            <div class="weekly-header">
+                <span class="weekly-plan">план: ${totalDays} раз в неделю</span>
+                <span class="weekly-done">выполнено: ${completedCount}</span>
+            </div>
+            <div class="weekly-bar">
+                <div class="weekly-fill" style="width: ${weekProgress}%"></div>
+            </div>
+            <div class="weekly-days-grid">
+                ${daysHtml}
+            </div>
+            <div class="weekly-stats">
+                <span> streak ${streak}</span>
+                ${!p.is_binary ? `<span>всего ${total} ${getRussianUnit(p.goal_unit)}</span>` : ''}
+            </div>
+        </div>
+    `;
+} else {
+    // Ежедневная практика
+    const last7 = logs.slice(-7).map(l => new Date(l.completed_at).getDate());
+
+    mainContent = `
+        <div class="calendar-grid">
+            ${renderCalendar(last7)}
+        </div>
+        <div class="streak-info">
+            <div class="streak-item"><span class="streak-value">${streak}</span> <span class="streak-label">дней подряд</span></div>
+            <div class="streak-item"><span class="streak-value">${monthPercent}%</span> <span class="streak-label">месяц</span></div>
+            ${!p.is_binary ? `
+                <div class="streak-item"><span class="streak-value">${total} ${getRussianUnit(p.goal_unit)}</span> <span class="streak-label">всего</span></div>
+            ` : ''}
+        </div>
+    `;
+}
+
+
+
+
+return `
+    <div class="slide ${i === currentSlide ? 'active' : i < currentSlide ? 'prev' : 'next'}" data-index="${i}">
+        <div class="slide-header">
+            <h3>${p.name}</h3>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <button class="mark-btn ${isTodayMarked ? 'marked' : ''}" onclick="toggleMark('${p.id}')">
+                    ${isTodayMarked ? '&#10003; отмечено' : 'отметить'}
+                </button>
+                <span class="practice-menu-btn" onclick="showPracticeMenu('${p.id}', event)" style="font-size: 1.5rem; cursor: pointer; padding: 0 0.2rem;">&#8942;</span>
+            </div>
+        </div>
+        ${mainContent}
+        <div class="practice-menu" id="practice-menu-${p.id}" style="display: none; position: absolute; top: 60px; right: 20px; background: white; border-radius: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 1px solid #e0d3c5; z-index: 1000; min-width: 150px;">
+            <div class="practice-menu-item delete" onclick="deletePractice('${p.id}')" style="padding: 0.8rem 1rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; color: #b91c1c;">
+                <span>&#128465;</span> удалить
+            </div>
+        </div>
+    </div>
+`;
+
+
+
+        }).join('');
+        
+        dotsContainer.innerHTML = activePractices.map((_, i) => `
+            <span class="slider-dot ${i === currentSlide ? 'active' : ''}" 
+                  onclick="goToSlide(${i})"></span>
+        `).join('');
+
+        if (prevArrow && nextArrow) {
+            prevArrow.disabled = currentSlide === 0;
+            nextArrow.disabled = currentSlide === activePractices.length - 1;
+        }
+    }
+
+    function renderCalendar(days) {
+        let html = '';
+        for (let i = 1; i <= 28; i++) {
+            const filled = days.includes(i) ? 'filled' : '';
+            html += `<div class="cal-day ${filled}">${i}</div>`;
+        }
+        return html;
+    }
+
+    function calculateStreak(logs) {
+        if (!logs.length) return 0;
+        let streak = 1;
+        for (let i = logs.length - 1; i > 0; i--) {
+            const diff = new Date(logs[i].completed_at) - new Date(logs[i-1].completed_at);
+            if (diff < 86400000 * 2) streak++;
+            else break;
+        }
+        return streak;
+    }
+
+
+
+function filterPosts(type) {
+    currentPostFilter = type;
+    
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if ((type === 'all' && btn.textContent === 'все') ||
+            (type === 'private' && btn.textContent === 'личное') ||
+            (type === 'public' && btn.textContent === 'общее')) {
+            btn.classList.add('active');
+        }
+    });
+    
+    let filteredPosts = allMyPosts;
+    
+    if (type === 'private') {
+        filteredPosts = allMyPosts.filter(p => p.privacy === 'private');
+    } else if (type === 'public') {
+        filteredPosts = allMyPosts.filter(p => p.privacy === 'friends' || p.privacy === 'public');
+    }
+    
+    renderFilteredPosts(filteredPosts);
+}
+
+
+
+
+    function renderFilteredPosts(posts) {
+        const container = document.getElementById('postsContainer');
+        container.innerHTML = '';
+        
+        if (posts.length === 0) {
+            container.innerHTML = '<p style="text-align:center; color:#7b6b5c; padding:2rem;">нет записей</p>';
+            return;
+        }
+        
+        const sortedPosts = [...posts].sort((a, b) => {
+            if (a.is_pinned && !b.is_pinned) return -1;
+            if (!a.is_pinned && b.is_pinned) return 1;
+            return new Date(b.created_at) - new Date(a.created_at);
+        });
+        
+        sortedPosts.forEach(p => {
+            const privacyText = {
+                'private': ' только я',
+                'friends': ' друзья',
+                'public': ' все'
+            }[p.privacy] || '';
+            
+            container.insertAdjacentHTML('beforeend', `
+                
+
+
+<div class="diary-entry" data-post-id="${p.id}" style="position: relative;">
+    <div class="entry-meta">
+        <span>${new Date(p.created_at).toLocaleDateString()}</span>
+        <span class="privacy-badge">${privacyText}</span>
+        ${p.is_pinned ? '<span style="color:#7f9a6b;"> закреплено</span>' : ''}
+    </div>
+    
+    <!-- Кнопка меню вынесена отдельно -->
+    <button class="menu-btn" onclick="togglePostMenu('${p.id}', event)" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.2rem; cursor: pointer;">&#8942;</button>
+    
+    ${p.photo_url ? `
+    <div class="entry-image">
+        <img src="/storage/${p.photo_url}" alt="post photo">
+    </div>
+    ` : ''}
+    
+    <div class="entry-content">${p.content}</div>
+    
+
+    <!-- Действия (лайки/комментарии) -->
+
+
+
+<div class="entry-actions" style="display: flex; gap: 1.5rem; align-items: center; margin-top: 1rem;">
+    ${p.privacy !== 'private' ? `
+        <span onclick="toggleLike('${p.id}', this)">&#10084; ${p.likes_count || 0}</span>
+        <span onclick="toggleComments('${p.id}')">&#128172; ${p.comments_count || 0}</span>
+    ` : ''}
+
+
+    <!-- Меню -->
+    <div class="post-menu" id="menu-${p.id}" style="display: none; position: absolute; top: 3rem; right: 1rem; background: white; border-radius: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 1px solid #e0d3c5; z-index: 1000; min-width: 200px;">
+        <div class="post-menu-item" onclick="togglePinPost('${p.id}', ${p.is_pinned})">
+            <span>&#128204;</span> ${p.is_pinned ? 'открепить' : 'закрепить'}
+        </div>
+        <div class="post-menu-item" onclick="sharePost('${p.id}')">
+            <span>&#128279;</span> поделиться ссылкой
+        </div>
+        <div class="post-menu-item delete" onclick="deletePost('${p.id}')">
+            <span>&#128465;</span> удалить
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+            `);
+        });
+    }
+
+
+
+function togglePostMenu(postId, event) {
+    event.stopPropagation();
+    
+    // Закрываем все другие меню
+    document.querySelectorAll('.post-menu').forEach(menu => {
+        if (menu.id !== `menu-${postId}`) {
+            menu.style.display = 'none';
+        }
+    });
+    
+    const menu = document.getElementById(`menu-${postId}`);
+    
+    if (!menu) return;
+    
+    // Просто переключаем, позиционирование уже задано в CSS
+    menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+}
+
+
+    async function togglePinPost(postId, isPinned) {
+        try {
+            const endpoint = isPinned ? '/unpin' : '/pin';
+            await apiRequest(`/posts/${postId}${endpoint}`, { method: 'POST' });
+            
+            const posts = await apiRequest('/posts');
+            allMyPosts = (posts.data || posts).filter(p => p.user_id === currentUser.id);
+            filterPosts(currentPostFilter);
+            
+            document.getElementById(`menu-${postId}`).style.display = 'none';
+        } catch (err) {
+            alert('Ошибка: ' + err.message);
+        }
+    }
+
+    function sharePost(postId) {
+        const url = window.location.origin + '/app/view_post.html?id=' + postId;
+        
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(() => {
+                alert('Ссылка скопирована');
+                document.getElementById(`menu-${postId}`).style.display = 'none';
+            }).catch(() => {
+                fallbackCopy(url, postId);
+            });
+        } else {
+            fallbackCopy(url, postId);
+        }
+    }
+
+    function fallbackCopy(text, postId) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        
+        try {
+            document.execCommand('copy');
+            alert('Ссылка скопирована');
+        } catch (err) {
+            alert('Не удалось скопировать ссылку');
+        }
+        
+        document.body.removeChild(textarea);
+        document.getElementById(`menu-${postId}`).style.display = 'none';
+    }
+
+    async function deletePost(postId) {
+        if (!confirm('Удалить запись?')) return;
+        
+        try {
+            await apiRequest(`/posts/${postId}`, { method: 'DELETE' });
+            const posts = await apiRequest('/posts');
+            allMyPosts = (posts.data || posts).filter(p => p.user_id === currentUser.id);
+            filterPosts(currentPostFilter);
+        } catch (err) {
+            alert('Ошибка удаления');
+        }
+    }
+
+    function likePost(postId) {
+        alert('Лайки пока в разработке');
+    }
+
+    function commentPost(postId) {
+        alert('Комментарии пока в разработке');
+    }
+
+    function goToSlide(index) {
+        const activePractices = practices.filter(p => !p.completed_at);
+        if (index < 0 || index >= activePractices.length || index === currentSlide) return;
+        
+        const direction = index > currentSlide ? 'next' : 'prev';
+        const slides = document.querySelectorAll('.slide');
+        
+        slides.forEach((slide, i) => {
+            slide.classList.remove('active', 'prev', 'next');
+            if (i === index) {
+                slide.classList.add('active');
+            } else if (i === currentSlide) {
+                slide.classList.add(direction === 'next' ? 'prev' : 'next');
+            } else {
+                slide.classList.add(i < index ? 'prev' : 'next');
+            }
+        });
+        
+        currentSlide = index;
+        
+        document.querySelectorAll('.practice-tab').forEach((tab, i) => {
+            tab.classList.toggle('active', i === currentSlide);
+        });
+        
+        document.querySelectorAll('.slider-dot').forEach((dot, i) => {
+            dot.classList.toggle('active', i === currentSlide);
+        });
+
+        const prevArrow = document.getElementById('prevArrow');
+        const nextArrow = document.getElementById('nextArrow');
+        if (prevArrow && nextArrow) {
+            prevArrow.disabled = currentSlide === 0;
+            nextArrow.disabled = currentSlide === activePractices.length - 1;
+        }
+    }
+
+    function nextSlide() {
+        const activePractices = practices.filter(p => !p.completed_at);
+        if (currentSlide < activePractices.length - 1) {
+            goToSlide(currentSlide + 1);
+        }
+    }
+
+    function prevSlide() {
+        if (currentSlide > 0) {
+            goToSlide(currentSlide - 1);
+        }
+    }
+
+    function initSwipe() {
+        const track = document.getElementById('sliderTrack');
+        if (!track) return;
+
+        track.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        track.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+    }
+
+    function handleSwipe() {
+        const swipeThreshold = 50;
+        if (touchEndX < touchStartX - swipeThreshold) {
+            nextSlide();
+        }
+        if (touchEndX > touchStartX + swipeThreshold) {
+            prevSlide();
+        }
+    }
+
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').style.display = 'none';
+        practiceToDelete = null;
+    }
+
+    async function confirmDelete() {
+        if (!practiceToDelete) return;
+        
+        try {
+            await apiRequest(`/practices/${practiceToDelete}`, { method: 'DELETE' });
+            practices = await apiRequest('/practices');
+            
+            renderSidebar(practices);
+            renderSlider(practices);            
+            closeDeleteModal();
+        } catch (err) {
+            alert('Ошибка удаления');
+        }
+    }
+
+    function showArchiveDeleteModal(practiceId, practiceName) {
+        archiveToDelete = practiceId;
+        document.getElementById('deleteArchiveName').textContent = `${practiceName}`;
+        document.getElementById('deleteArchiveModal').style.display = 'flex';
+    }
+
+    function closeArchiveDeleteModal() {
+        document.getElementById('deleteArchiveModal').style.display = 'none';
+        archiveToDelete = null;
+    }
+
+    async function confirmArchiveDelete() {
+        if (!archiveToDelete) return;
+        
+        try {
+            await apiRequest(`/practices/${archiveToDelete}`, { method: 'DELETE' });
+            practices = await apiRequest('/practices');
+            
+            renderSidebar(practices);
+            renderSlider(practices);           
+            closeArchiveDeleteModal();
+        } catch (err) {
+            alert('Ошибка удаления');
+        }
+    }
+
+
+
+
+async function toggleMark(id) {
+    try {
+        const practice = practices.find(p => p.id === id);
+        if (!practice) return;
+
+
+        const today = new Date().toDateString();
+        const todayLogs = practice.logs?.filter(log => 
+            new Date(log.completed_at).toDateString() === today
+        ) || [];
+
+        console.log('todayLogs:', todayLogs);
+
+        if (todayLogs.length > 0) {
+            const lastLog = todayLogs[0];
+            if (confirm('Отменить отметку за сегодня?')) {
+                await apiRequest(`/practices/${id}/log/${lastLog.id}`, { method: 'DELETE' });
+            } else {
+                return;
+            }
+        } else {
+            // Для weekly практик
+            if (practice.period_type === 'weekly') {
+                const dayOfWeek = new Date().getDay(); // 0 = вс, 1 = пн ... 6 = сб
+                const weekDay = dayOfWeek === 0 ? 7 : dayOfWeek; // 7 = вс, 1..6 = пн..сб
+                
+                console.log('Отмечаем weekly, день в базе:', weekDay);
+                
+                // Проверяем, можно ли сегодня отмечать
+                if (!practice.days_of_week || !practice.days_of_week.includes(weekDay)) {
+                    alert('Сегодня не день практики');
+                    return;
+                }
+                
+                await apiRequest(`/practices/${id}/log`, { 
+                    method: 'POST',
+                    body: JSON.stringify({ 
+                        value: practice.goal_value || 1
+                        // для weekly не нужно передавать день, сервер сам ставит today
+                    })
+                });
+            } else {
+                // Для daily практик  как обычно
+                await apiRequest(`/practices/${id}/log`, { 
+                    method: 'POST',
+                    body: JSON.stringify({ 
+                        value: practice.goal_value || 1
+                    })
+                });
+            }
+        }
+
+        practices = await apiRequest('/practices');
+        renderSidebar(practices);
+        renderSlider(practices);
+
+    } catch (err) {
+        console.error('Ошибка отметки:', err);
+        alert('Ошибка');
+    }
+}    
+
+
+    
+
+
+
+document.addEventListener('click', function() {
+        document.querySelectorAll('.post-menu').forEach(menu => {
+            menu.style.display = 'none';
+        });
+    });
+
+
+
+
+
+// КОММЕНТАРИИ В ПРОФИЛЕ
+let profileCommentsPage = {};
+
+async function toggleComments(postId) {
+    const postElement = document.querySelector(`.diary-entry[data-post-id="${postId}"]`);
+    if (!postElement) return;
+    
+    let commentsSection = postElement.querySelector('.comments-section');
+    
+    if (commentsSection) {
+        commentsSection.remove();
+        delete profileCommentsPage[postId];
+        return;
+    }
+    
+    profileCommentsPage[postId] = 1;
+    await loadProfileComments(postId, 1);
+}
+
+async function loadProfileComments(postId, page) {
+    const postElement = document.querySelector(`.diary-entry[data-post-id="${postId}"]`);
+    if (!postElement) return;
+    
+    let commentsSection = postElement.querySelector('.comments-section');
+    
+    try {
+        const response = await fetch(`/api/posts/${postId}/comments?page=${page}&limit=10`, {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await response.json();
+        const comments = data.data || data;
+        const hasMore = data.next_page_url || (comments.length === 10);
+        
+        if (!commentsSection) {
+            commentsSection = document.createElement('div');
+            commentsSection.className = 'comments-section';
+            postElement.appendChild(commentsSection);
+        }
+        
+        if (page === 1) {
+            commentsSection.innerHTML = '';
+        }
+        
+        comments.forEach(c => {
+            commentsSection.insertAdjacentHTML('beforeend', `
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <div>
+                            <span class="comment-author">${c.user?.name || 'Пользователь'}</span>
+                            <span class="comment-handle">@${c.user?.username || 'unknown'}</span>
+                        </div>
+                        <span class="comment-date">${new Date(c.created_at).toLocaleDateString()}</span>
+                        ${c.user_id === currentUser.id ? `
+                            <button class="comment-delete" onclick="deleteProfileComment('${c.id}', '${postId}')">&#128465;</button>
+                        ` : ''}
+                    </div>
+                    <div class="comment-text">${c.content}</div>
+                </div>
+            `);
+        });
+        
+        if (hasMore) {
+            const showMoreBtn = document.createElement('button');
+            showMoreBtn.className = 'show-more-btn';
+            showMoreBtn.textContent = 'показать ещё';
+            showMoreBtn.onclick = () => {
+                profileCommentsPage[postId]++;
+                loadProfileComments(postId, profileCommentsPage[postId]);
+                showMoreBtn.remove();
+            };
+            commentsSection.appendChild(showMoreBtn);
+        }
+        
+        if (page === 1 || !document.getElementById(`profile-comment-input-${postId}`)) {
+            const formHtml = `
+                <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                    <input type="text" id="profile-comment-input-${postId}" 
+                           placeholder="написать комментарий... (Enter для отправки)" 
+                           style="flex:1; padding: 0.8rem 1rem; border-radius: 1rem; border: 1px solid #e0d3c5; background: white;">
+                    <button onclick="addProfileComment('${postId}')" 
+                            style="background: #d8cdbf; border: none; padding: 0.8rem 1.5rem; border-radius: 1rem; cursor: pointer;">отправить</button>
+                </div>
+            `;
+            commentsSection.insertAdjacentHTML('beforeend', formHtml);
+        }
+        
+    } catch (err) {
+        console.error('Ошибка загрузки комментариев:', err);
+    }
+}
+
+async function addProfileComment(postId) {
+    const input = document.getElementById(`profile-comment-input-${postId}`);
+    const content = input.value.trim();
+    if (!content) return;
+    
+    try {
+        await apiRequest(`/posts/${postId}/comments`, {
+            method: 'POST',
+            body: JSON.stringify({ content })
+        });
+        
+        const post = allMyPosts.find(p => p.id === postId);
+        if (post) {
+            post.comments_count = (post.comments_count || 0) + 1;
+            const commentSpan = document.querySelector(`[onclick="toggleComments('${postId}')"]`);
+            if (commentSpan) {
+                commentSpan.innerHTML = `&#128172; ${post.comments_count}`;
+            }
+        }
+        
+        input.value = '';
+        
+        const postElement = document.querySelector(`.diary-entry[data-post-id="${postId}"]`);
+        const oldSection = postElement.querySelector('.comments-section');
+        if (oldSection) oldSection.remove();
+        
+        profileCommentsPage[postId] = 1;
+        await loadProfileComments(postId, 1);
+        
+    } catch (err) {
+        alert('Ошибка');
+    }
+}
+
+async function deleteProfileComment(commentId, postId) {
+    if (!confirm('Удалить комментарий?')) return;
+    
+    try {
+        await apiRequest(`/comments/${commentId}`, { method: 'DELETE' });
+        
+        const post = allMyPosts.find(p => p.id === postId);
+        if (post) {
+            post.comments_count = Math.max(0, (post.comments_count || 0) - 1);
+            const commentSpan = document.querySelector(`[onclick="toggleComments('${postId}')"]`);
+            if (commentSpan) {
+                commentSpan.innerHTML = `&#128172; ${post.comments_count}`;
+            }
+        }
+        
+        const postElement = document.querySelector(`.diary-entry[data-post-id="${postId}"]`);
+        const oldSection = postElement.querySelector('.comments-section');
+        if (oldSection) oldSection.remove();
+        
+        if (profileCommentsPage[postId]) {
+            profileCommentsPage[postId] = 1;
+            await loadProfileComments(postId, 1);
+        }
+        
+    } catch (err) {
+        alert('Ошибка');
+    }
+}
+
+// Добавляем обработчик Enter для комментариев в профиле
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && e.target.id && e.target.id.startsWith('profile-comment-input-')) {
+        e.preventDefault();
+        const postId = e.target.id.replace('profile-comment-input-', '');
+        addProfileComment(postId);
+    }
+});
+
+
+
+
+
+async function toggleLike(postId, element) {
+    try {
+        const post = allMyPosts.find(p => p.id === postId);
+        if (!post) return;
+
+        const method = post.liked_by_user ? 'DELETE' : 'POST';
+        const url = post.liked_by_user ? `/posts/${postId}/unlike` : `/posts/${postId}/like`;
+        
+        await apiRequest(url, { method });
+        
+        post.liked_by_user = !post.liked_by_user;
+        
+        if (post.liked_by_user) {
+            post.likes_count = (post.likes_count || 0) + 1;
+        } else {
+            post.likes_count = Math.max(0, (post.likes_count || 0) - 1);
+        }
+        
+        const likeSpan = element;
+        likeSpan.innerHTML = `&#10084; ${post.likes_count}`;
+        likeSpan.style.color = post.liked_by_user ? '#e25555' : '';
+        
+        // Обновляем в общем списке (на всякий случай)
+        const postInAll = allMyPosts.find(p => p.id === postId);
+        if (postInAll) {
+            postInAll.liked_by_user = post.liked_by_user;
+            postInAll.likes_count = post.likes_count;
+        }
+        
+    } catch (err) {
+        console.error('Ошибка лайка:', err);
+        alert('Не удалось поставить лайк');
+    }
+}
+
+
+
+
+
+
+
+// ===== ГАМБУРГЕР МЕНЮ =====
+const hamburger = document.getElementById('hamburgerBtn');
+const sideMenu = document.getElementById('sideMenu');
+const overlay = document.getElementById('menuOverlay');
+const closeBtn = document.getElementById('closeMenuBtn');
+
+function openMenu() {
+    sideMenu.classList.add('open');
+    overlay.classList.add('show');
+    hamburger.classList.add('open');
+    
+    const links = document.querySelectorAll('.side-menu-items a');
+    links.forEach(link => {
+        link.classList.remove('animate');
+        void link.offsetWidth;
+        link.classList.add('animate');
+    });
+}
+
+function closeMenu() {
+    sideMenu.classList.remove('open');
+    overlay.classList.remove('show');
+    hamburger.classList.remove('open');
+    
+    const links = document.querySelectorAll('.side-menu-items a');
+    links.forEach(link => {
+        link.classList.remove('animate');
+    });
+}
+
+hamburger.addEventListener('click', function() {
+    if (sideMenu.classList.contains('open')) {
+        closeMenu();
+    } else {
+        openMenu();
+    }
+});
+
+if (closeBtn) {
+    closeBtn.addEventListener('click', closeMenu);
+}
+
+overlay.addEventListener('click', closeMenu);
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && sideMenu.classList.contains('open')) {
+        closeMenu();
+    }
+});
+
+
+
+
+// Открытие меню практики
+
+function showPracticeMenu(practiceId, event) {
+    event.stopPropagation();
+    
+    document.querySelectorAll('.practice-menu').forEach(menu => {
+        if (menu.id !== `practice-menu-${practiceId}`) {
+            menu.style.display = 'none';
+        }
+    });
+    
+    const menu = document.getElementById(`practice-menu-${practiceId}`);
+    if (menu) {
+        menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    }
+}
+
+// Удаление практики
+
+async function deletePractice(practiceId) {
+    if (!confirm('Удалить практику? Все отметки тоже удалятся.')) return;
+    
+    try {
+        await apiRequest(`/practices/${practiceId}`, { method: 'DELETE' });
+        
+        // Обновляем данные
+        practices = await apiRequest('/practices');
+        renderSidebar(practices);
+        renderSlider(practices);       
+        
+    } catch (err) {
+        console.error('Ошибка удаления:', err);
+        alert('Ошибка удаления');
+    }
+}
+
+
+
+
+
+// Сохраняем состояние активной вкладки
+let currentMobileTab = 'asks'; // 'asks' или 'diary'
+
+// Обновленная функция переключения вкладок
+function switchMobileTab(tab) {
+    const asksSection = document.getElementById('mobileAskesSection');
+    const diarySection = document.getElementById('mobileDiarySection');
+    const tabs = document.querySelectorAll('.mobile-tab');
+    
+    currentMobileTab = tab; // сохраняем текущую вкладку
+    
+    if (tab === 'asks') {
+        asksSection.classList.add('active');
+        diarySection.classList.remove('active');
+        tabs[0].classList.add('active');
+        tabs[1].classList.remove('active');
+    } else {
+        diarySection.classList.add('active');
+        asksSection.classList.remove('active');
+        tabs[1].classList.add('active');
+        tabs[0].classList.remove('active');
+    }
+    
+    // Сохраняем в localStorage при переключении
+    localStorage.setItem('activeTab', tab);
+}
+
+// Функция для открытия формы новой практики
+function openNewPractice() {
+    localStorage.setItem('returnToTab', 'asks'); // куда вернуться
+    window.location.href = '/app/practice.html';
+}
+
+// Функция для открытия формы новой записи в дневнике
+function openNewPost() {
+    localStorage.setItem('returnToTab', 'diary'); // куда вернуться
+    window.location.href = '/app/post.html';
+}
+
+// Функция для восстановления вкладки после возврата
+function restoreActiveTab() {
+    // Сначала проверяем, откуда мы вернулись
+    const returnToTab = localStorage.getItem('returnToTab');
+    if (returnToTab) {
+        switchMobileTab(returnToTab);
+        localStorage.removeItem('returnToTab');
+    } else {
+        // Если нет returnToTab, восстанавливаем последнюю активную вкладку
+        const savedTab = localStorage.getItem('activeTab');
+        if (savedTab) {
+            switchMobileTab(savedTab);
+        } else {
+            // По умолчанию показываем аскезы
+            switchMobileTab('asks');
+        }
+    }
+}
+
+
+
+
+    loadProfile();
+</script>
+
+
+
+<!-- Модальное окно для новой записи в дневнике -->
+<div class="modal" id="newPostModal">
+    <div class="modal-content" style="max-width: 500px; text-align: left;">
+        <h3 style="margin-bottom: 1rem;">новая запись</h3>
+        
+        <textarea id="newPostContent" placeholder="что у вас произошло?" 
+                  style="width: 100%; min-height: 120px; padding: 1rem; border-radius: 1rem; border: 1px solid #e0d3c5; margin-bottom: 1rem; font-family: inherit; resize: vertical;"></textarea>
+        
+        <div style="margin-bottom: 1rem;">
+            <label style="display: block; margin-bottom: 0.5rem; color: #5e6b53;">видимость:</label>
+            <select id="newPostPrivacy" style="width: 100%; padding: 0.8rem; border-radius: 1rem; border: 1px solid #e0d3c5; background: white;">
+                <option value="private">только я</option>
+                <option value="friends">друзья</option>
+                <option value="public">все</option>
+            </select>
+        </div>
+        
+        <div class="modal-buttons">
+            <button class="modal-btn confirm" onclick="createPost()">опубликовать</button>
+            <button class="modal-btn cancel" onclick="closeNewPostModal()">отмена</button>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>
