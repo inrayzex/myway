@@ -1,7 +1,7 @@
 # Путь  Социальная платформа для практик саморазвития 
 
 <p align="center">
-  <img src="https://myvay.ru/storage/app/public/logo.png" alt="Мой путь logo" width="200">
+  <img src="https://myvay.ru/storage/logo.png" alt="Мой путь logo" width="200">
 </p>
 
 <p align="center">
