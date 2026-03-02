@@ -44,10 +44,6 @@
 
 ##  Архитектура и технологии
 
-<p align="center">
-  <img src="./readme_assets/architecture.png" alt="Архитектура" width="80%">
-</p>
-
 ### **Бэкенд**
 - **Laravel 12**  основной фреймворк
 - **PostgreSQL 13**  основная БД
