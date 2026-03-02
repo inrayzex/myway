@@ -126,22 +126,29 @@
    ```
 Приложение будет доступно по адресу: http://localhost
 
- Контейнеризация (детали)
+🐳 Контейнеризация (детали)
 Проект использует многоконтейнерную архитектуру:
 
 Контейнер	Назначение	Зависимости
 put_app	PHP-FPM с Laravel	postgres, redis
-put_nginx	Веб-сервер Nginx	app
-put_postgres	База данных PostgreSQL 13	
-put_redis	Кэш, сессии, очереди Redis	
+put_nginx	Веб-сервер	app
+put_postgres	База данных PostgreSQL	—
+put_redis	Кэш, сессии, очереди	—
 Основные Docker-команды
-Команда	Описание
-docker-compose up -d	Запуск контейнеров в фоне
-docker-compose down	Остановка и удаление контейнеров
-docker-compose logs -f [service_name]	Просмотр логов (app, nginx и др.)
-docker exec -it put_app bash	Вход в контейнер с Laravel
-docker-compose build	Пересборка образов
- PWA и уведомления (Firebase)
+bash
+# Сборка и запуск
+docker-compose up -d --build
+
+# Остановка
+docker-compose down
+
+# Просмотр логов
+docker-compose logs -f [service_name]
+
+# Вход в контейнер
+docker exec -it put_app bash
+
+📱 PWA и уведомления (Firebase)
 Настройка Firebase
 Создайте проект в Firebase Console
 
@@ -152,81 +159,23 @@ docker-compose build	Пересборка образов
 Скачайте Service Account JSON и поместите в storage/app/firebase/
 
 Файлы PWA
-Файл	Назначение
-/public/manifest.json	Конфигурация установки PWA
-/public/sw.js	Базовый сервис-воркер
-/public/firebase-messaging-sw.js	Сервис-воркер для уведомлений
+/public/manifest.json — конфигурация установки
+
+/public/sw.js — базовый сервис-воркер
+
+/public/firebase-messaging-sw.js — воркер для уведомлений
+
 Дедупликация уведомлений
-В проекте реализована защита от двойных уведомлений: сервис-воркер сохраняет ID полученных сообщений в кэше и игнорирует повторы в течение 5 секунд.
+В проекте реализована защита от двойных уведомлений: сервис-воркер сохраняет ID полученных сообщений в кэше и игнорирует повторы.
 
- Администрирование
-Для управления контентом используется Filament 3. Доступ к админ-панели:
-
-URL: http://localhost/admin
-
-Создание администратора: php artisan make:filament-user
-
-Возможности админки:
-
-Управление пользователями (блокировка, роли)
-
-Модерация постов и комментариев
-
-Создание и редактирование статей базы знаний
-
-Добавление рекомендаций (книги, видео)
-
-Управление клубами по интересам
-
-Просмотр статистики активности
-
- Переменные окружения (ключевые)
-В файле .env необходимо настроить:
-
-env
-# База данных
-DB_CONNECTION=pgsql
-DB_HOST=put_postgres
-DB_PORT=5432
-DB_DATABASE=laravel
-DB_USERNAME=laravel
-DB_PASSWORD=secret
-
-# Redis
-REDIS_HOST=put_redis
-REDIS_PASSWORD=null
-REDIS_PORT=6379
-
-# Firebase
-FIREBASE_CREDENTIALS=/var/www/html/storage/app/firebase/service-account.json
-FIREBASE_VAPID_KEY=your_vapid_key_here
-
-# Приложение
-APP_NAME="Путь"
-APP_ENV=local
-APP_DEBUG=true
-APP_URL=http://localhost
- Тестирование
-Запуск тестов (в контейнере):
-
-bash
-docker exec -it put_app php artisan test
- Деплой на продакшн
-Настройте сервер с Docker и Docker Compose
-
-Скопируйте проект и настройте .env (production режим)
-
-Запустите контейнеры:
-
-bash
-docker-compose -f docker-compose.prod.yml up -d
-Настройте SSL через Let's Encrypt (встроенная поддержка)
-
- Лицензия
+📄 Лицензия
 Проект распространяется под лицензией MIT. Подробнее см. в файле LICENSE.
 
- Контакты и ссылки
-Ресурс	Ссылка
- Демо-сайт	https://myvay.ru
- GitHub	https://github.com/inrayzex/put-path
- Email	inrayzex@gmail.com
+📞 Контакты и ссылки
+Демо-сайт: https://myvay.ru
+
+GitHub: https://github.com/inrayzex/put-path
+
+Email: inrayzex@gmail.com
+
+
