@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Путь  завершённые аскезы</title>
+    <title>Мой Путь&nbsp;&#183;&nbsp;завершённые аскезы</title>
     <style>
         * {
             margin: 0;
@@ -16,7 +16,8 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.5;
             color: #2a2f2b;
-            padding: 2rem 1rem;
+            padding: 0;
+            margin: 0;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -28,8 +29,8 @@
             width: 100%;
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(8px);
-            border-radius: 2.5rem;
-            padding: 2rem;
+            border-radius: 1rem;
+            padding: 1rem;
             border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
@@ -80,11 +81,16 @@
             align-items: center;
             cursor: pointer;
             transition: all 0.2s;
+            position: relative;
         }
 
         .archive-item:hover {
             background: rgba(255, 255, 255, 0.8);
             border-color: #b8a48f;
+        }
+
+        .archive-item-info {
+            flex: 1;
         }
 
         .archive-item-info h3 {
@@ -99,10 +105,69 @@
             font-size: 0.9rem;
         }
 
+        .archive-item-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
         .archive-item-date {
             color: #7b6b5c;
             font-size: 0.9rem;
             text-align: right;
+        }
+
+        .menu-btn {
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.5rem;
+            color: #7b6b5c;
+            z-index: 10;
+        }
+
+        .menu-btn:hover {
+            background: #f0e8e0;
+        }
+
+        .archive-menu {
+            position: absolute;
+            top: 100%;
+            right: 1rem;
+            margin-top: 0.5rem;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 1px solid #e0d3c5;
+            z-index: 1000;
+            min-width: 200px;
+            display: none;
+        }
+
+        .archive-menu-item {
+            padding: 0.8rem 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #2f4033;
+            transition: background 0.2s;
+        }
+
+        .archive-menu-item:first-child {
+            border-radius: 1rem 1rem 0 0;
+        }
+
+        .archive-menu-item:last-child {
+            border-radius: 0 0 1rem 1rem;
+        }
+
+        .archive-menu-item:hover {
+            background: #f0e8e0;
+        }
+
+        .archive-menu-item.delete:hover {
+            color: #b91c1c;
         }
 
         .empty-state {
@@ -117,6 +182,80 @@
             margin-top: 2rem;
             color: #a49888;
             font-size: 0.85rem;
+        }
+
+        /* Модальное окно подтверждения удаления */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 2rem;
+            max-width: 320px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .modal-content h3 {
+            font-size: 1.3rem;
+            font-weight: 450;
+            color: #2e3b32;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-content p {
+            color: #5e6b53;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .modal-btn.confirm {
+            background: #e7ddd2;
+            color: #2f3e32;
+        }
+
+        .modal-btn.confirm:hover {
+            background: #d2c0ae;
+        }
+
+        .modal-btn.cancel {
+            background: #f0ebe4;
+            color: #786e62;
+        }
+
+        .modal-btn.cancel:hover {
+            background: #e5dbd1;
         }
     </style>
 </head>
@@ -137,7 +276,19 @@
     </div>
 
     <div class="footer-note">
-        каждый день &#183; шаг на пути
+        каждый день&nbsp;&#183;&nbsp;шаг на пути
+    </div>
+</div>
+
+<!-- Модальное окно подтверждения удаления -->
+<div class="modal" id="deleteModal">
+    <div class="modal-content">
+        <h3>Удалить аскезу?</h3>
+        <p id="deletePracticeName"></p>
+        <div class="modal-buttons">
+            <button class="modal-btn confirm" onclick="confirmDelete()">Да, удалить</button>
+            <button class="modal-btn cancel" onclick="closeDeleteModal()">Отмена</button>
+        </div>
     </div>
 </div>
 
@@ -146,6 +297,9 @@
     if (!token) {
         window.location.href = '/';
     }
+
+    let allPractices = [];
+    let practiceToDelete = null;
 
     async function apiRequest(url, options = {}) {
         const headers = {
@@ -161,10 +315,10 @@
     async function loadArchivedAskesas() {
         try {
             // Получаем все практики
-            const practices = await apiRequest('/practices');
+            allPractices = await apiRequest('/practices');
             
             // Фильтруем завершённые аскезы
-            const archived = practices.filter(p => p.goal_days && p.completed_at);
+            const archived = allPractices.filter(p => p.goal_days && p.completed_at);
             
             // Сортируем по дате завершения (сначала новые)
             archived.sort((a, b) => new Date(b.completed_at) - new Date(a.completed_at));
@@ -188,18 +342,81 @@
             const completedDate = new Date(a.completed_at).toLocaleDateString();
             
             return `
-                <div class="archive-item" onclick="window.location.href='/app/practice-view.html?id=${a.id}'">
-                    <div class="archive-item-info">
+                <div class="archive-item" data-practice-id="${a.id}">
+                    <div class="archive-item-info" onclick="window.location.href='/app/practice-view.html?id=${a.id}'">
                         <h3>${a.name}</h3>
                         <p>${completed} дней  ${a.goal_unit || 'практика'}</p>
                     </div>
-                    <div class="archive-item-date">
-                        завершено<br>${completedDate}
+                    <div class="archive-item-right">
+                        <div class="archive-item-date">
+                            завершено<br>${completedDate}
+                        </div>
+                        <span class="menu-btn" onclick="toggleMenu('${a.id}', event)">&#8942;</span>
+                    </div>
+                    <div class="archive-menu" id="menu-${a.id}" style="display: none;">
+                        <div class="archive-menu-item delete" onclick="deletePractice('${a.id}', '${a.name}', event)">
+                            <span>&#128465;</span> удалить
+                        </div>
                     </div>
                 </div>
             `;
         }).join('');
     }
+
+    function toggleMenu(practiceId, event) {
+        event.stopPropagation();
+        
+        // Закрываем все другие меню
+        document.querySelectorAll('.archive-menu').forEach(menu => {
+            if (menu.id !== `menu-${practiceId}`) {
+                menu.style.display = 'none';
+            }
+        });
+        
+        const menu = document.getElementById(`menu-${practiceId}`);
+        if (menu) {
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        }
+    }
+
+    function deletePractice(practiceId, practiceName, event) {
+        event.stopPropagation();
+        practiceToDelete = practiceId;
+        document.getElementById('deletePracticeName').textContent = `${practiceName}?`;
+        document.getElementById('deleteModal').style.display = 'flex';
+        
+        // Закрываем меню
+        document.getElementById(`menu-${practiceId}`).style.display = 'none';
+    }
+
+    async function confirmDelete() {
+        if (!practiceToDelete) return;
+        
+        try {
+            await apiRequest(`/practices/${practiceToDelete}`, { 
+                method: 'DELETE' 
+            });
+            
+            // Перезагружаем список
+            await loadArchivedAskesas();
+            closeDeleteModal();
+        } catch (err) {
+            alert('Ошибка при удалении');
+            console.error(err);
+        }
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').style.display = 'none';
+        practiceToDelete = null;
+    }
+
+    // Закрываем меню при клике вне его
+    document.addEventListener('click', function() {
+        document.querySelectorAll('.archive-menu').forEach(menu => {
+            menu.style.display = 'none';
+        });
+    });
 
     loadArchivedAskesas();
 </script>

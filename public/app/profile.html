@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Путь  профиль</title>
+    <title>Мой Путь&nbsp;&#183;&nbsp;профиль</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
     <style>
         * {
             margin: 0;
@@ -139,7 +141,7 @@
             color: #726a5f;
             font-size: 0.9rem;
             border-left: 2px solid #b4aa9b;
-        /*    padding-left: 1rem;*/
+            padding-left: 1rem;
             margin: 1rem 0;
         }
 
@@ -309,6 +311,7 @@
         .entry-image img {
             max-width: 100%;
             height: auto;
+            max-height: 500px;
             display: block;
         }
 
@@ -1259,6 +1262,9 @@ border-radius: 50%;
        .diary-section{
            padding: 0rem;
         }
+       .entry-image img {
+          max-height: none;
+           }
 
 }
 
@@ -1387,7 +1393,6 @@ html, body {
 
 
 
-
 <!-- Кнопка гамбургера с анимацией -->
 <div class="mobile-header">
   <div>
@@ -1453,8 +1458,7 @@ html, body {
                     <span id="avatarPlaceholder">фото</span>
                 </div>
                    <div style="margin:0 auto;">
-                     <div class="user-name" id="userName"></div>                
-                     <div class="user-status" id="userStatus"></div>
+                     <div class="user-name" id="userName"></div>                                   
                      <div class="quote-micro" id="userQuote"></div>
                   </div>
              </div> 
@@ -1597,15 +1601,22 @@ document.addEventListener('DOMContentLoaded', function() {
     async function loadProfile() {
         try {
             currentUser = await apiRequest('/user');
+
+             
+             if (window.initFirebaseNotifications) {
+            await window.initFirebaseNotifications(currentUser.email);
+           }
+ 
+
             document.getElementById('userName').textContent = currentUser.name;
             
-            const statusEl = document.getElementById('userStatus');
-            if (currentUser.status && currentUser.status.trim() !== '' && currentUser.status !== 'нет статуса') {
-                statusEl.textContent = currentUser.status;
-                statusEl.style.display = 'inline-block';
-            } else {
-                statusEl.style.display = 'none';
-            }
+           // const statusEl = document.getElementById('userStatus');
+          //  if (currentUser.status && currentUser.status.trim() !== '' && currentUser.status !== 'нет статуса') {
+          //      statusEl.textContent = currentUser.status;
+          //      statusEl.style.display = 'inline-block';
+          //  } else {
+           //     statusEl.style.display = 'none';
+          //  }
             
             const quoteEl = document.getElementById('userQuote');
             if (currentUser.quote && currentUser.quote.trim() !== '') {
@@ -2683,6 +2694,230 @@ function restoreActiveTab() {
         </div>
     </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Firebase для уведомлений (автоматический запрос) -->
+<script type="module">
+/*  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+  import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-messaging.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDcOD59aBfY4qRhdZYUt2RlqcbRE_nME4Q",
+    authDomain: "myvay-73784.firebaseapp.com",
+    projectId: "myvay-73784",
+    storageBucket: "myvay-73784.firebasestorage.app",
+    messagingSenderId: "250020923277",
+    appId: "1:250020923277:web:795b68f6946cf4edc29fc4"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const messaging = getMessaging(app);
+
+  async function sendTokenToServer(token) {
+    try {
+      await fetch('/api/save-fcm-token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+        body: JSON.stringify({ 
+                    fcm_token: token,
+                    email: currentUser.email  //  вот так
+                       })
+      });
+    } catch (err) {
+      console.error('Error saving token:', err);
+    }
+  }
+
+  //  ЗАПРАШИВАЕМ РАЗРЕШЕНИЕ СРАЗУ ПРИ ЗАГРУЗКЕ 
+  (async function() {
+    // Проверяем, поддерживает ли браузер уведомления
+    if (!('Notification' in window)) {
+      console.log('Браузер не поддерживает уведомления');
+      return;
+    }
+
+    // Если статус еще не определен (default)  запрашиваем
+    if (Notification.permission === 'default') {
+      console.log('Запрашиваем разрешение...');
+      try {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+          console.log(' Пользователь разрешил');
+          const token = await getToken(messaging, { 
+            vapidKey: 'BFF0tH1PuRqLa-0pWPvbJDOWRiuQNKPbLSx0f0CnL42G0Suq5Sw9ocbrAwk1ahPOJDDljfxExY3CLZDHL8dlHT8' // ТВОЙ КЛЮЧ
+          });
+          if (token) {
+            console.log(' Токен получен');
+            await sendTokenToServer(token);
+          }
+        } else {
+          console.log(' Пользователь запретил');
+        }
+      } catch (error) {
+        console.error('Ошибка запроса:', error);
+      }
+    } 
+    // Если уже разрешено  просто получаем токен
+    else if (Notification.permission === 'granted') {
+      console.log('Разрешение уже есть, получаем токен');
+      try {
+        const token = await getToken(messaging, { 
+          vapidKey: 'BFF0tH1PuRqLa-0pWPvbJDOWRiuQNKPbLSx0f0CnL42G0Suq5Sw9ocbrAwk1ahPOJDDljfxExY3CLZDHL8dlHT8'
+        });
+        if (token) {
+          console.log(' Токен получен');
+          await sendTokenToServer(token);
+        }
+      } catch (error) {
+        console.error('Ошибка получения токена:', error);
+      }
+    }
+    // Если запрещено  ничего не делаем
+  })();
+
+  // Слушаем входящие уведомления
+  onMessage(messaging, (payload) => {
+    console.log(' Уведомление:', payload);
+    if (payload.notification) {
+      new Notification(payload.notification.title, {
+        body: payload.notification.body
+      });
+    }
+  }); */
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- Firebase для уведомлений -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+  import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-messaging.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDcOD59aBfY4qRhdZYUt2RlqcbRE_nME4Q",
+    authDomain: "myvay-73784.firebaseapp.com",
+    projectId: "myvay-73784",
+    storageBucket: "myvay-73784.firebasestorage.app",
+    messagingSenderId: "250020923277",
+    appId: "1:250020923277:web:795b68f6946cf4edc29fc4"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const messaging = getMessaging(app);
+
+  // Функция отправки токена (теперь принимает email)
+  async function sendTokenToServer(token, userEmail) {
+    try {
+      await fetch('/api/save-fcm-token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+        body: JSON.stringify({
+          fcm_token: token,
+          email: userEmail
+        })
+      });
+      console.log(' Токен отправлен');
+    } catch (err) {
+      console.error(' Error saving token:', err);
+    }
+  }
+
+  // Функция инициализации уведомлений (ждёт currentUser)
+  window.initFirebaseNotifications = async function(userEmail) {
+    if (!('Notification' in window)) {
+      console.log('Браузер не поддерживает уведомления');
+      return;
+    }
+
+    const handleToken = async () => {
+      try {
+        const token = await getToken(messaging, {
+          vapidKey: 'BFF0tH1PuRqLa-0pWPvbJDOWRiuQNKPbLSx0f0CnL42G0Suq5Sw9ocbrAwk1ahPOJDDljfxExY3CLZDHL8dlHT8'
+        });
+        if (token) {
+          console.log(' Токен получен');
+          await sendTokenToServer(token, userEmail);
+        }
+      } catch (error) {
+        console.error(' Ошибка получения токена:', error);
+      }
+    };
+
+    if (Notification.permission === 'granted') {
+      console.log('Разрешение уже есть');
+      await handleToken();
+    } else if (Notification.permission === 'default') {
+      console.log('Запрашиваем разрешение...');
+      try {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+          console.log(' Пользователь разрешил');
+          await handleToken();
+        } else {
+          console.log(' Пользователь запретил');
+        }
+      } catch (error) {
+        console.error('Ошибка запроса:', error);
+      }
+    }
+  };
+
+  // Слушаем входящие уведомления (можно сразу)
+  onMessage(messaging, (payload) => {
+    console.log(' Уведомление:', payload);
+    if (payload.notification) {
+      new Notification(payload.notification.title, {
+        body: payload.notification.body
+      });
+    }
+  });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+           <script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('SW registered'))
+      .catch(err => console.log('SW error:', err));
+  });
+}
+</script>     
 
 
 

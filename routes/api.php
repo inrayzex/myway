@@ -12,11 +12,17 @@ use App\Models\User;
 
 
 
+
+
 Route::post('/register', [AuthController::class, 'register'])->withoutMiddleware(['auth:sanctum']);
 
 Route::post('/login', [AuthController::class, 'login']);
 
-   Route::middleware('auth:sanctum')->group(function () {
+
+Route::post('/save-fcm-token', [App\Http\Controllers\Api\FcmController::class, 'saveToken']);
+
+
+      Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::get('/user', function (Request $request) {
@@ -45,16 +51,18 @@ Route::post('/login', [AuthController::class, 'login']);
 
 
     // routes profile.html
-    // Редактирование профиля
+
     Route::put('/user/quote', [App\Http\Controllers\Api\UserController::class, 'updateQuote']);
     Route::put('/user/status', [App\Http\Controllers\Api\UserController::class, 'updateStatus']);
     Route::put('/user/privacy', [App\Http\Controllers\Api\UserController::class, 'updatePrivacy']);
     Route::post('/user/avatar', [App\Http\Controllers\Api\UserController::class, 'uploadAvatar']);
+    Route::put('/user/name', [App\Http\Controllers\Api\UserController::class, 'updateName']);
+
     Route::delete('/user/avatar', [App\Http\Controllers\Api\UserController::class, 'deleteAvatar']);
     Route::get('/users/followings', [App\Http\Controllers\Api\UserController::class, 'followings']);
     Route::get('/users/followers', [App\Http\Controllers\Api\UserController::class, 'followers']);
 
-
+    Route::get('/recommendations', [App\Http\Controllers\Api\RecommendationController::class, 'index']);
 
 
     Route::get('/users', function (Request $request) {
@@ -136,5 +144,9 @@ Route::get('/users/search', function (Request $request) {
     Route::apiResource('posts', PostController::class);
 
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy']);
+
+     // Route::post('/save-fcm-token', [App\Http\Controllers\Api\FcmController::class, 'saveToken']);
+
+
 
 });

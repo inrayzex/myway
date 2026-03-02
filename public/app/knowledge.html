@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Путь  База знаний</title>
+    <title>Мой Путь&nbsp;&#183;&nbsp;база знаний</title>
     <style>
         * {
             margin: 0;
@@ -656,6 +656,31 @@ position: relative;
         </div>
 
         <div class="knowledge-sidebar">
+
+
+
+            <div class="section-block">
+                <div class="section-title"> рекомендуем</div>
+                <div id="booksContainer">
+                    <div class="book-item">
+                        <div class="book-cover"></div>
+                        <div class="book-info">
+                            <h4>Искусство присутствовать</h4>
+                            <p>Тит Нат Хан</p>
+                        </div>
+                    </div>
+                    <div class="book-item">
+                        <div class="book-cover"></div>
+                        <div class="book-info">
+                            <h4>Сердце медитации</h4>
+                            <p>Далай-лама</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
             <div class="section-block">
                 <div class="section-title"> глоссарий</div>
 
@@ -711,25 +736,8 @@ position: relative;
         </div>
 
 
-            <div class="section-block">
-                <div class="section-title"> рекомендуем</div>
-                <div id="booksContainer">
-                    <div class="book-item">
-                        <div class="book-cover"></div>
-                        <div class="book-info">
-                            <h4>Искусство присутствовать</h4>
-                            <p>Тит Нат Хан</p>
-                        </div>
-                    </div>
-                    <div class="book-item">
-                        <div class="book-cover"></div>
-                        <div class="book-info">
-                            <h4>Сердце медитации</h4>
-                            <p>Далай-лама</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+
         </div>
     </div>
 
@@ -763,6 +771,8 @@ position: relative;
         try {
             allArticles = await apiRequest('/articles');
             renderArticles(allArticles);
+             await loadRecommendations();
+   
         } catch (err) {
             console.error(err);
             document.getElementById('articlesContainer').innerHTML = 'Ошибка загрузки';
@@ -817,18 +827,27 @@ function renderArticles(articles) {
 
 
 
+function filterArticles(category) {
+    document.querySelectorAll('.category-tag').forEach(tag => tag.classList.remove('active'));
+    event.target.classList.add('active');
 
-    function filterArticles(category) {
-        document.querySelectorAll('.category-tag').forEach(tag => tag.classList.remove('active'));
-        event.target.classList.add('active');
-
-        if (category === 'all') {
-            renderArticles(allArticles);
-        } else {
-            const filtered = allArticles.filter(a => a.category === category);
-            renderArticles(filtered);
-        }
+    if (category === 'all') {
+        renderArticles(allArticles);
+    } else {
+        // Маппинг английских названий на русские
+        const categoryMap = {
+            'meditation': 'медитация',
+            'yoga': 'йога',
+            'mindfulness': 'осознанность',
+            'nutrition': 'питание',
+            'philosophy': 'философия'
+        };
+        const russianCategory = categoryMap[category] || category;
+        const filtered = allArticles.filter(a => a.category === russianCategory);
+        renderArticles(filtered);
     }
+}
+
 
     function searchArticles() {
         const query = document.getElementById('searchInput').value.toLowerCase();
@@ -898,6 +917,43 @@ document.addEventListener('keydown', function(e) {
         closeMenu();
     }
 });
+
+
+
+
+async function loadRecommendations() {
+    try {
+        const response = await fetch('/api/recommendations', {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const recommendations = await response.json();
+        
+        const container = document.getElementById('booksContainer');
+        if (!container) return;
+        
+        if (recommendations.length === 0) {
+            container.innerHTML = '<div class="book-item">Пока нет рекомендаций</div>';
+            return;
+        }
+        
+        container.innerHTML = '';
+        recommendations.forEach(rec => {
+            container.insertAdjacentHTML('beforeend', `
+                <div class="book-item">
+                    <div class="book-cover">${rec.cover_url ? `<img src="/storage/${rec.cover_url}" style="width:100%; height:100%; object-fit:cover;">` : ''}</div>
+                    <div class="book-info">
+                        <h4>${rec.title}</h4>
+                        <p>${rec.author || ''}</p>
+                    </div>
+                </div>
+            `);
+        });
+    } catch (err) {
+        console.error('Ошибка загрузки рекомендаций');
+    }
+}
+
+
 
 
 

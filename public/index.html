@@ -106,6 +106,38 @@
             box-shadow: 0 0 0 3px rgba(180,160,140,0.15);
         }
 
+        /* Стили для поля с паролем */
+        .password-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-input {
+            width: 100%;
+            padding-right: 3rem !important;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.3rem;
+            color: #8d7f71;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s;
+        }
+
+        .password-toggle:hover {
+            color: #2e3b32;
+        }
+
         .submit-btn {
             width: 100%;
             background: #d8cdbf;
@@ -175,11 +207,14 @@
         <div id="loginForm">
             <div class="form-group">
                 <label class="form-label">email</label>
-                <input class="form-input" type="email" id="loginEmail" placeholder="hello@path.ru" value="test@test.com">
+                <input class="form-input" type="email" id="loginEmail" placeholder="ваш email">
             </div>
             <div class="form-group">
                 <label class="form-label">пароль</label>
-                <input class="form-input" type="password" id="loginPassword" placeholder="" value="password123">
+                <div class="password-wrapper">
+                    <input class="form-input password-input" type="password" id="loginPassword" placeholder="">
+                    <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">&#128065;</button>
+                </div>
             </div>
             <button class="submit-btn" onclick="login()">войти</button>
             <div class="forgot-link">забыли пароль?</div>
@@ -197,15 +232,21 @@
             </div>
             <div class="form-group">
                 <label class="form-label">email</label>
-                <input class="form-input" type="email" id="regEmail" placeholder="ivan@path.ru">
+                <input class="form-input" type="email" id="regEmail" placeholder="ivan@mail.ru">
             </div>
             <div class="form-group">
                 <label class="form-label">пароль (минимум 6 символов)</label>
-                <input class="form-input" type="password" id="regPassword" placeholder="">
+                <div class="password-wrapper">
+                    <input class="form-input password-input" type="password" id="regPassword" placeholder="">
+                    <button type="button" class="password-toggle" onclick="togglePassword('regPassword', this)">&#128065;</button>
+                </div>
             </div>
             <div class="form-group">
                 <label class="form-label">подтверждение пароля</label>
-                <input class="form-input" type="password" id="regPasswordConfirmation" placeholder="">
+                <div class="password-wrapper">
+                    <input class="form-input password-input" type="password" id="regPasswordConfirmation" placeholder="">
+                    <button type="button" class="password-toggle" onclick="togglePassword('regPasswordConfirmation', this)">&#128065;</button>
+                </div>
             </div>
             <button class="submit-btn" onclick="register()">зарегистрироваться</button>
         </div>
@@ -250,6 +291,18 @@
             document.getElementById('errorMessage').classList.add('hidden');
         }
 
+        // Функция для показа/скрытия пароля с числовыми кодами
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.innerHTML = '&#128274;'; // 
+            } else {
+                input.type = 'password';
+                button.innerHTML = '&#128065;'; // 
+            }
+        }
+
         async function apiRequest(url, options = {}) {
             const headers = {
                 'Content-Type': 'application/json',
@@ -265,7 +318,6 @@
             const data = await response.json();
             
             if (!response.ok) {
-                // Если есть ошибки валидации
                 if (data.errors) {
                     const messages = Object.values(data.errors).flat().join('\n');
                     throw new Error(messages);

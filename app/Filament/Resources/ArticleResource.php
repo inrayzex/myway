@@ -20,92 +20,72 @@ class ArticleResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
-{
-    return $form
-        ->schema([
-            Forms\Components\TextInput::make('title')
-                ->label('Заголовок')
-                ->required()
-                ->maxLength(255),
-            Forms\Components\RichEditor::make('content')
-                ->label('Содержание')
-                ->required()
-                ->columnSpanFull(),
-            Forms\Components\Textarea::make('excerpt')
-                ->label('Краткое описание')
-                ->maxLength(65535)
-                ->columnSpanFull(),
-            Forms\Components\Select::make('category')
-                ->label('Категория')
-                ->options([
-                    'meditation' => 'Медитация',
-                    'yoga' => 'Йога',
-                    'philosophy' => 'Философия',
-                    'nutrition' => 'Питание',
-                    'mindfulness' => 'Осознанность',
-                ])
-                ->required(),
-            Forms\Components\TextInput::make('author')
-                ->label('Автор')
-                ->maxLength(255),
-            Forms\Components\TextInput::make('read_time')
-                ->label('Время чтения (мин)')
-                ->numeric(),
-            Forms\Components\Select::make('difficulty')
-                ->label('Сложность')
-                ->options([
-                    'легкая' => 'Лёгкая',
-                    'средняя' => 'Средняя',
-                    'сложная' => 'Сложная',
-                ]),
-            Forms\Components\FileUpload::make('image_url')
-                ->label('Изображение')
-                ->image()
-                ->directory('articles'),
-        ]);
-}
+    {
+        return $form
+            ->schema([
+                Forms\Components\TextInput::make('title')
+                    ->required()
+                    ->maxLength(255),
+               Forms\Components\RichEditor::make('content')
+                    ->required()
+                    ->columnSpanFull(),
+                Forms\Components\TextInput::make('excerpt')
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('category')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('author')
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('read_time')
+                    ->numeric(),
+                Forms\Components\TextInput::make('difficulty')
+                    ->maxLength(255),
+                Forms\Components\FileUpload::make('image_url')
+                    ->image(),
+            ]);
+    }
 
     public static function table(Table $table): Table
-{
-    return $table
-        ->columns([
-            Tables\Columns\TextColumn::make('title')
-                ->label('Заголовок')
-                ->searchable(),
-            Tables\Columns\TextColumn::make('category')
-                ->label('Категория'),
-            Tables\Columns\TextColumn::make('author')
-                ->label('Автор'),
-            Tables\Columns\TextColumn::make('read_time')
-                ->label('Время чтения')
-                ->suffix(' мин'),
-            Tables\Columns\IconColumn::make('has_image')
-                ->label('Фото')
-                ->boolean()
-                ->getStateUsing(fn ($record): bool => !empty($record->image_url)),
-            Tables\Columns\TextColumn::make('created_at')
-                ->label('Создано')
-                ->dateTime(),
-        ])
-        ->filters([
-            Tables\Filters\SelectFilter::make('category')
-                ->options([
-                    'meditation' => 'Медитация',
-                    'yoga' => 'Йога',
-                    'philosophy' => 'Философия',
-                    'nutrition' => 'Питание',
+    {
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->label('ID'),
+                Tables\Columns\TextColumn::make('title')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('excerpt')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('category')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('author')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('read_time')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('difficulty')
+                    ->searchable(),
+                Tables\Columns\ImageColumn::make('image_url'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->filters([
+                //
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
-        ])
-        ->actions([
-            Tables\Actions\EditAction::make(),
-            Tables\Actions\DeleteAction::make(),
-        ])
-        ->bulkActions([
-            Tables\Actions\BulkActionGroup::make([
-                Tables\Actions\DeleteBulkAction::make(),
-            ]),
-        ]);
-}
+            ]);
+    }
 
     public static function getRelations(): array
     {

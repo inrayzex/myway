@@ -12,7 +12,7 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
-    'timezone' => 'UTC',
+    'timezone' => 'Europe/Moscow',
 
     'locale' => 'en',
 

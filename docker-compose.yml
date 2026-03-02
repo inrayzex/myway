@@ -1,0 +1,65 @@
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: put_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: put_db
+      POSTGRES_USER: put_user
+      POSTGRES_PASSWORD: 111
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - put-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: put_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - put-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: put_app
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis    #  ДОБАВИЛИ ЗАВИСИМОСТЬ
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - put-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: put_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+      - ./ssl:/etc/letsencrypt/live/myvay.ru
+    depends_on:
+      - app
+    networks:
+      - put-network
+
+networks:
+  put-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:   

@@ -93,10 +93,10 @@ class Practice extends Model
 
 
 
-public function reminders()
-{
-    return $this->hasMany(Reminder::class);
-}
+//public function reminders()
+//{
+  //  return $this->hasMany(Reminder::class);
+//}
 
 
 

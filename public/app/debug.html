@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Firebase Debug</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: monospace; padding: 20px; background: #f0ebe4; }
+        #status { white-space: pre-wrap; word-break: break-word; }
+        .step { margin: 10px 0; padding: 10px; border-radius: 5px; background: #fff; }
+        .error { background: #ffdddd; }
+    </style>
+</head>
+<body>
+    <h1>Firebase Debug</h1>
+    <div id="status"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/12.9.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.9.0/firebase-messaging-compat.js"></script>
+    
+    <script>
+        const status = document.getElementById('status');
+        function addLog(text, isError = false) {
+            const div = document.createElement('div');
+            div.className = 'step' + (isError ? ' error' : '');
+            div.textContent = text;
+            status.appendChild(div);
+        }
+
+        addLog('1. Script loaded');
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDcOD59aBfY4qRhdZYUt2RlqcbRE_nME4Q",
+            authDomain: "myvay-73784.firebaseapp.com",
+            projectId: "myvay-73784",
+            storageBucket: "myvay-73784.firebasestorage.app",
+            messagingSenderId: "250020923277",
+            appId: "1:250020923277:web:795b68f6946cf4edc29fc4"
+        };
+
+        try {
+            firebase.initializeApp(firebaseConfig);
+            addLog('2. Firebase initialized');
+            
+            const messaging = firebase.messaging();
+            addLog('3. Messaging created');
+
+            addLog('4. Requesting permission...');
+            
+            Notification.requestPermission().then(permission => {
+                addLog('5. Permission: ' + permission);
+                
+                if (permission === 'granted') {
+                    addLog('6. Getting token...');
+                    
+                    messaging.getToken({ vapidKey: 'BFF0tH1PuRqLa-0pWPvbJDOWRiuQNKPbLSx0f0CnL42G0Suq5Sw9ocbrAwk1ahPOJDDljfxExY3CLZDHL8dlHT8' })
+                        .then(token => {
+                            addLog('7. Token: ' + token.substring(0, 30) + '...');
+                            
+                            addLog('8. Sending to server...');
+                            
+                            fetch('https://myvay.ru/api/save-fcm-token', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ 
+                                    fcm_token: token,
+                                    email: 'test@test.com' 
+                                })
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                addLog('9. Server response: ' + JSON.stringify(data));
+                            })
+                            .catch(err => {
+                                addLog('9. Send error: ' + err, true);
+                            });
+                        })
+                        .catch(err => {
+                            addLog('7. Token error: ' + err, true);
+                        });
+                }
+            }).catch(err => {
+                addLog('5. Permission error: ' + err, true);
+            });
+        } catch (e) {
+            addLog('Init error: ' + e, true);
+        }
+    </script>
+</body>
+</html>
